@@ -1,0 +1,8 @@
+{
+  "htmlWhitespaceSensitivity": "ignore",
+  "semi": false,
+  "jsxBracketSameLine": true,
+  "trailingComma": "none",
+  "arrowParens": "avoid",
+  "tabWidth": 2
+}
