@@ -1,14 +1,13 @@
 <template>
-  <div>
-    Email:
-    <input v-model="email" />
+  <v-container>
+    <v-text-field label="E-mail" v-model="email" outlined></v-text-field>
     <br />
-    Password:
-    <input v-model="password" />
+    <v-text-field label="Password" v-model="password" outlined></v-text-field>
     <br />
-    <button>LOGIN</button>
+    <v-btn @click="login">LOGIN</v-btn>
     <br />
-  </div>
+    <v-btn @click="logout">logout</v-btn>
+  </v-container>
 </template>
 
 <script>
@@ -16,12 +15,23 @@ export default {
   name: "Login",
   computed: {},
   data: () => ({
-    password: "",
-    email: ""
+    email: "milosmedicdev@gmail.com",
+    password: "milosmedic"
   }),
   methods: {
     login() {
-      console.log("login")
+      let payload = {
+        email: this.email,
+        password: this.password
+      }
+      this.$store.dispatch("auth/login", payload).then(response => {
+        console.log("response in app: ", response)
+      })
+    },
+    logout() {
+      this.$store.dispatch("auth/logout").then(response => {
+        console.log("response in app logout:  ", response)
+      })
     }
   }
 }
