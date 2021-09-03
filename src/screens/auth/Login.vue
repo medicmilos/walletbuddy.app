@@ -4,8 +4,9 @@
     <br />
     <v-text-field label="Password" v-model="password" outlined></v-text-field>
     <br />
-    <v-btn>LOGIN</v-btn>
+    <v-btn @click="login">LOGIN</v-btn>
     <br />
+    <v-btn @click="logout">logout</v-btn>
   </v-container>
 </template>
 
@@ -14,12 +15,23 @@ export default {
   name: "Login",
   computed: {},
   data: () => ({
-    password: "",
-    email: ""
+    email: "milosmedicdev@gmail.com",
+    password: "milosmedic"
   }),
   methods: {
     login() {
-      console.log("login")
+      let payload = {
+        email: this.email,
+        password: this.password
+      }
+      this.$store.dispatch("auth/login", payload).then(response => {
+        console.log("response in app: ", response)
+      })
+    },
+    logout() {
+      this.$store.dispatch("auth/logout").then(response => {
+        console.log("response in app logout:  ", response)
+      })
     }
   }
 }

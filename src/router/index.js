@@ -1,8 +1,10 @@
 import Vue from "vue"
-import Router from "vue-router"
+
+import Home from "../screens/Home"
 import Login from "../screens/auth/Login"
 import Register from "../screens/auth/Register"
-import Home from "../screens/Home"
+import Router from "vue-router"
+import store from "../store"
 
 Vue.use(Router)
 
@@ -39,6 +41,25 @@ let router = new Router({
   ],
   scrollBehavior() {
     return { x: 0, y: 0 }
+  }
+})
+
+router.beforeEach((to, from, next) => {
+  store.dispatch["auth/checkIsAuthenticated"]
+  next()
+})
+
+router.beforeEach((to, from, next) => {
+  if (
+    (to.name === "login" ||
+      to.name === "register" ||
+      to.name === "forgot-password" ||
+      to.name === "reset-password") &&
+    store.getters["auth/isAuthenticated"]
+  ) {
+    next({ name: "home" })
+  } else {
+    next()
   }
 })
 
