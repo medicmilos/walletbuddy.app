@@ -23,7 +23,7 @@ new Vue({
     theme: {
       themes: {
         light: {
-          primary: "red"
+          primary: "#f0f0f0"
         }
       }
     }

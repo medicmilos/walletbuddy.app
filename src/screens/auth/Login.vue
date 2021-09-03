@@ -1,14 +1,12 @@
 <template>
-  <div>
-    Email:
-    <input v-model="email" />
+  <v-container>
+    <v-text-field label="E-mail" v-model="email" outlined></v-text-field>
     <br />
-    Password:
-    <input v-model="password" />
+    <v-text-field label="Password" v-model="password" outlined></v-text-field>
     <br />
-    <button>LOGIN</button>
+    <v-btn>LOGIN</v-btn>
     <br />
-  </div>
+  </v-container>
 </template>
 
 <script>
