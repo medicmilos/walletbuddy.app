@@ -1,10 +1,4 @@
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut
-} from "firebase/auth"
+import auth from "../../api/apiCalls/auth"
 
 export default {
   state: { isAuthenticated: false },
@@ -19,58 +13,41 @@ export default {
     }
   },
   actions: {
-    checkIsAuthenticated(context) {
-      console.log("123123123")
-      const auth = getAuth()
-
-      return onAuthStateChanged(auth, user => {
-        console.log("ee: ", user)
-
+    async checkIsAuthenticated(context) {
+      try {
+        const user = await auth.checkIsAuthenticated()
         if (user) {
           context.commit("setIsAuthenticated", true)
         } else {
           context.commit("setIsAuthenticated", false)
         }
-      })
+      } catch (error) {
+        console.log(error)
+      }
     },
-    login(context, payload) {
-      const auth = getAuth()
-
-      return signInWithEmailAndPassword(auth, payload.email, payload.password)
-        .then(response => {
-          console.log("login: response", response)
-          return { status: true, data: response }
-        })
-        .catch(error => {
-          console.log("login: error", error)
-          return { status: false, data: error }
-        })
+    async login(context, payload) {
+      try {
+        const response = await auth.login(payload)
+        return { status: true, payload: response }
+      } catch (error) {
+        return { status: false, payload: error }
+      }
     },
-    register(context, payload) {
-      const auth = getAuth()
-
-      return createUserWithEmailAndPassword(
-        auth,
-        payload.email,
-        payload.password
-      )
-        .then(response => {
-          return { status: true, data: response }
-        })
-        .catch(error => {
-          return { status: false, data: error }
-        })
+    async register(context, payload) {
+      try {
+        const response = await auth.register(payload)
+        return { status: true, payload: response }
+      } catch (error) {
+        return { status: false, payload: error }
+      }
     },
-    logout() {
-      const auth = getAuth()
-
-      return signOut(auth)
-        .then(response => {
-          return { status: true, data: response }
-        })
-        .catch(error => {
-          return { status: false, data: error }
-        })
+    async logout() {
+      try {
+        const response = await auth.logout()
+        return { status: true, payload: response }
+      } catch (error) {
+        return { status: false, payload: error }
+      }
     }
   },
   namespaced: true

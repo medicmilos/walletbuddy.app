@@ -1,12 +1,10 @@
 <template>
   <div>
-    Email:
-    <input v-model="email" />
+    <v-text-field label="E-mail" v-model="email" outlined></v-text-field>
     <br />
-    Password:
-    <input v-model="password" />
+    <v-text-field label="Password" v-model="password" outlined></v-text-field>
     <br />
-    <button>REGISTER</button>
+    <button @click="register">REGISTER</button>
     <br />
   </div>
 </template>
@@ -15,13 +13,21 @@
 export default {
   name: "Register",
   computed: {},
-  data: () => ({
-    password: "",
-    email: ""
-  }),
+  data() {
+    return {
+      password: "",
+      email: ""
+    }
+  },
   methods: {
-    login() {
-      console.log("register")
+    register() {
+      let payload = {
+        email: this.email,
+        password: this.password
+      }
+      this.$store.dispatch("auth/register", payload).then(response => {
+        console.log("response in app: ", response)
+      })
     }
   }
 }

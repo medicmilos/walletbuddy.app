@@ -1,10 +1,11 @@
 import Vue from "vue"
 
+import { getAuth } from "firebase/auth"
+
 import Home from "../screens/Home"
 import Login from "../screens/auth/Login"
 import Register from "../screens/auth/Register"
 import Router from "vue-router"
-import store from "../store"
 
 Vue.use(Router)
 
@@ -35,7 +36,14 @@ let router = new Router({
       name: "home",
       component: Home,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
+      }
+    },
+    {
+      path: "*",
+      component: Home,
+      meta: {
+        requiresAuth: true
       }
     }
   ],
@@ -45,21 +53,22 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  store.dispatch["auth/checkIsAuthenticated"]
-  next()
-})
+  const auth = getAuth()
+  const currentUser = auth.currentUser
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
-router.beforeEach((to, from, next) => {
-  if (
-    (to.name === "login" ||
-      to.name === "register" ||
-      to.name === "forgot-password" ||
-      to.name === "reset-password") &&
-    store.getters["auth/isAuthenticated"]
-  ) {
-    next({ name: "home" })
+  if (requiresAuth) {
+    if (currentUser) {
+      next()
+    } else {
+      next({ name: "login" })
+    }
   } else {
-    next()
+    if ((to.name === "login" || to.name === "register") && currentUser) {
+      next({ name: "home" })
+    } else {
+      next()
+    }
   }
 })
 
