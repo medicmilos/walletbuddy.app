@@ -14,10 +14,12 @@
 export default {
   name: "Login",
   computed: {},
-  data: () => ({
-    email: "milosmedicdev@gmail.com",
-    password: "milosmedic"
-  }),
+  data() {
+    return {
+      email: "milosmedicdev@gmail.com",
+      password: "milosmedic"
+    }
+  },
   methods: {
     login() {
       let payload = {
@@ -26,6 +28,9 @@ export default {
       }
       this.$store.dispatch("auth/login", payload).then(response => {
         console.log("response in app: ", response)
+        if (response.status) {
+          this.$router.push({ name: "home" })
+        }
       })
     },
     logout() {

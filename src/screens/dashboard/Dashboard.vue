@@ -6,6 +6,7 @@
       permanent
       app
     >
+      {{ isAuthenticated }}
       <v-list-item class="px-2">
         <v-list-item-avatar>
           <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
@@ -53,14 +54,20 @@
 <script>
 export default {
   name: "Dashboard",
-  data: () => ({
-    drawer: true,
-    mini: true,
-    snackbar: false,
-    snackbarText: "",
-    snackbarType: 0
-  }),
-  computed: {},
+  data() {
+    return {
+      drawer: true,
+      mini: true,
+      snackbar: false,
+      snackbarText: "",
+      snackbarType: 0
+    }
+  },
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters["auth/isAuthenticated"]
+    }
+  },
   created() {
     this.$root.$on("showActionStatus", (type, data) => {
       this.snackbarType = type
