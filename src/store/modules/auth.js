@@ -13,16 +13,12 @@ export default {
     }
   },
   actions: {
-    async checkIsAuthenticated(context) {
+    checkIsAuthenticated(context) {
       try {
-        const user = await auth.checkIsAuthenticated()
-        if (user) {
-          context.commit("setIsAuthenticated", true)
-        } else {
-          context.commit("setIsAuthenticated", false)
-        }
+        const user = auth.getAuth().currentUser
+        context.commit("setIsAuthenticated", !!user)
       } catch (error) {
-        console.log(error)
+        console.log(error.message)
       }
     },
     async login(context, payload) {
@@ -30,7 +26,7 @@ export default {
         const response = await auth.login(payload)
         return { status: true, payload: response }
       } catch (error) {
-        return { status: false, payload: error }
+        return { status: false, payload: error.message }
       }
     },
     async register(context, payload) {
@@ -38,7 +34,7 @@ export default {
         const response = await auth.register(payload)
         return { status: true, payload: response }
       } catch (error) {
-        return { status: false, payload: error }
+        return { status: false, payload: error.message }
       }
     },
     async logout() {
@@ -46,7 +42,7 @@ export default {
         const response = await auth.logout()
         return { status: true, payload: response }
       } catch (error) {
-        return { status: false, payload: error }
+        return { status: false, payload: error.message }
       }
     }
   },

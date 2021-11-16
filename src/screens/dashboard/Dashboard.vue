@@ -5,30 +5,39 @@
       :mini-variant.sync="mini"
       permanent
       app
+      v-if="isAuthenticated"
+      class="drawer-color"
     >
-      {{ isAuthenticated }}
       <v-list-item class="px-2">
         <v-list-item-avatar>
           <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
         </v-list-item-avatar>
 
-        <v-list-item-title>Milos Medic</v-list-item-title>
+        <v-list-item-title class="drawerText--text">
+          Milos Medic
+        </v-list-item-title>
 
         <v-btn icon @click.stop="mini = !mini">
-          <v-icon>mdi-chevron-left</v-icon>
+          <v-icon color="drawerIcon">mdi-chevron-left</v-icon>
         </v-btn>
       </v-list-item>
 
       <v-divider></v-divider>
 
       <v-list dense>
-        <v-list-item link>
+        <template v-for="item in drawerItems">
+          <DashboardItem :key="item.id" :item="item" />
+        </template>
+
+        <v-list-item link @click="logout">
           <v-list-item-icon>
-            <v-icon>mdi-home-city</v-icon>
+            <v-icon color="drawerIcon">mdi-logout</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
+            <v-list-item-title class="drawerText--text">
+              Logout
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -52,15 +61,32 @@
 </template>
 
 <script>
+import DashboardItem from "../../components/dashboard/DashboardItem.vue"
+
 export default {
   name: "Dashboard",
+  components: { DashboardItem },
   data() {
     return {
       drawer: true,
       mini: true,
       snackbar: false,
       snackbarText: "",
-      snackbarType: 0
+      snackbarType: 0,
+      drawerItems: [
+        {
+          id: 1,
+          routeName: "home",
+          icon: "mdi-home-city",
+          title: "Home"
+        },
+        {
+          id: 2,
+          routeName: "settings",
+          icon: "mdi-cog",
+          title: "Settings"
+        }
+      ]
     }
   },
   computed: {
@@ -69,14 +95,35 @@ export default {
     }
   },
   created() {
-    this.$root.$on("showActionStatus", (type, data) => {
+    this.$root.$on("actionResponse", (type, data) => {
       this.snackbarType = type
       this.snackbarText = data
       this.snackbar = true
     })
   },
-  methods: {}
+  methods: {
+    logout() {
+      this.$store.dispatch("auth/logout").then(() => {
+        this.$router.push({ name: "login" })
+      })
+    }
+  }
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+body {
+  font-family: Rubik, Avenir Next, Helvetica Neue, sans-serif;
+  .v-application {
+    font-family: Rubik, Avenir Next, Helvetica Neue, sans-serif;
+  }
+}
+.drawer-color {
+  background: linear-gradient(
+    294.17deg,
+    rgb(47, 25, 55) 35.57%,
+    rgb(69, 38, 80) 92.42%,
+    rgb(69, 38, 80) 92.42%
+  );
+}
+</style>

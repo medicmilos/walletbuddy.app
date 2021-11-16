@@ -6,6 +6,10 @@
     <br />
     <button @click="register">REGISTER</button>
     <br />
+    Have an account? Sign in now.
+
+    <br />
+    Sign up
   </div>
 </template>
 
