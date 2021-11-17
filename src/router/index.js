@@ -1,11 +1,13 @@
+import { getAuth } from "firebase/auth"
+import Router from "vue-router"
 import Vue from "vue"
 
-import { getAuth } from "firebase/auth"
+import store from "../store"
 
 import Home from "../screens/Home"
 import Login from "../screens/auth/Login"
 import Register from "../screens/auth/Register"
-import Router from "vue-router"
+import Settings from "../screens/settings/Settings"
 
 Vue.use(Router)
 
@@ -40,6 +42,14 @@ let router = new Router({
       }
     },
     {
+      path: "/podesavanja",
+      name: "settings",
+      component: Settings,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: "*",
       component: Home,
       meta: {
@@ -56,6 +66,8 @@ router.beforeEach((to, from, next) => {
   const auth = getAuth()
   const currentUser = auth.currentUser
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  store.dispatch("auth/checkIsAuthenticated")
 
   if (requiresAuth) {
     if (currentUser) {

@@ -37,7 +37,13 @@ auth.onAuthStateChanged(() => {
         theme: {
           themes: {
             light: {
-              primary: "#f0f0f0"
+              primary: "#2e0d34",
+              pinkButton: "#e1567c",
+              purpleButton: "#6d5ec7",
+              drawerIcon: "#8f82a0",
+              drawerIconActive: "#ffffff",
+              drawerText: "#8f82a0",
+              drawerTextActive: "#ffffff"
             }
           }
         }
