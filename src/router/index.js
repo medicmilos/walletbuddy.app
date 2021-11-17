@@ -4,6 +4,7 @@ import Vue from "vue"
 
 import store from "../store"
 
+import ComingSoon from "../screens/ComingSoon"
 import Home from "../screens/Home"
 import Login from "../screens/auth/Login"
 import Register from "../screens/auth/Register"
@@ -17,16 +18,22 @@ let router = new Router({
   routes: [
     {
       path: "/",
-      redirect: "/prijava"
+      redirect: "/comingsoon"
     },
     {
-      path: "/prijava",
+      path: "/comingsoon",
+      name: "comingsoon",
+      component: ComingSoon,
+      meta: { requiresAuth: false }
+    },
+    {
+      path: "/signin",
       name: "login",
       component: Login,
       meta: { requiresAuth: false }
     },
     {
-      path: "/registracija",
+      path: "/signup",
       name: "register",
       component: Register,
       meta: {
@@ -34,7 +41,7 @@ let router = new Router({
       }
     },
     {
-      path: "/pocetna",
+      path: "/home",
       name: "home",
       component: Home,
       meta: {
@@ -42,7 +49,7 @@ let router = new Router({
       }
     },
     {
-      path: "/podesavanja",
+      path: "/settings",
       name: "settings",
       component: Settings,
       meta: {
