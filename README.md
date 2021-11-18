@@ -1,2 +1,2 @@
 # walletbuddy.app
-WalletBuddy - final year project - master studies
+WalletBuddy - Expenses management app
