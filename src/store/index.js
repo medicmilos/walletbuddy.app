@@ -4,11 +4,13 @@ Vue.use(Vuex)
 
 import auth from "./modules/auth"
 import boards from "./modules/boards"
+import settings from "./modules/settings"
 
 export default new Vuex.Store({
   modules: {
     auth,
-    boards
+    boards,
+    settings
   },
   state: {},
   getters: {},

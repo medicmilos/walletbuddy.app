@@ -8,13 +8,13 @@
       v-if="isAuthenticated"
       class="drawer-color"
     >
-      <v-list-item class="px-2">
+      <v-list-item class="px-2" v-if="email">
         <v-list-item-avatar>
           <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-title class="drawerText--text">
-          {{ getCurrentUser.email }}
+          {{ email }}
         </v-list-item-title>
 
         <v-btn icon @click.stop="mini = !mini">
@@ -101,14 +101,14 @@ export default {
     isAuthenticated() {
       return this.$store.getters["auth/isAuthenticated"]
     },
-    getCurrentUser() {
-      return this.$store.getters["auth/getCurrentUser"]
+    email() {
+      return this.$store.getters["auth/email"]
     }
   },
   created() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.$store.dispatch("auth/getCurrentUser", user)
+        this.$store.dispatch("settings/getCurrentUser")
       }
     })
 

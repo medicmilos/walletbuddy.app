@@ -8899,7 +8899,7 @@ vuetify@2.5.6:
   resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.5.6.tgz#9cbb1eacece6c42028216312b9be23e35a7f5cf4"
   integrity sha512-2T8ML5PYuJ/AdMVH3ZIvzHnsM0nX8t4Xzj+0HFFGfLT7jLlptCFpG+JE8+kyrgGZlbUgulyOwCUu8hJkVsReFA==
 
-vuex-map-fields@1.4.1:
+vuex-map-fields@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/vuex-map-fields/-/vuex-map-fields-1.4.1.tgz#3f22f0c3d39e25968d3a74fc2b43738c23c4ae4d"
   integrity sha512-jvIcpvoIPqwvJCOfRkPU9Rj0EbjWuk7GlNC5LXU9mCXVGZph6bWGHZssnoUzpLMxJtXQEHoVyZkKf7YQV+/bnQ==
