@@ -2,12 +2,11 @@ import moment from "moment"
 import Vue from "vue"
 import Vuetify from "vuetify"
 
-import { getAuth } from "firebase/auth"
-import { initializeApp } from "firebase/app"
+import firebase from "firebase/app"
 import { ValidationObserver, ValidationProvider } from "vee-validate"
+import "firebase/auth"
 
 import Dashboard from "./screens/dashboard/Dashboard"
-import firebaseConfig from "./config/firebaseConfig"
 import router from "./router"
 import store from "./store"
 
@@ -21,12 +20,8 @@ Vue.component("ValidationObserver", ValidationObserver)
 Vue.prototype.moment = moment
 Vue.use(Vuetify)
 
-initializeApp(firebaseConfig)
-
 let app
-const auth = getAuth()
-
-auth.onAuthStateChanged(() => {
+firebase.auth().onAuthStateChanged(() => {
   if (!app) {
     /* eslint-disable no-new */
     app = new Vue({
