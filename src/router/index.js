@@ -3,6 +3,7 @@ import store from "../store"
 import Vue from "vue"
 import VueRouter from "vue-router"
 
+import Board from "../screens/boards/Board"
 import Boards from "../screens/boards/Boards"
 import ComingSoon from "../screens/ComingSoon"
 import ForgotPassword from "../screens/auth/ForgotPassword"
@@ -63,6 +64,15 @@ const routes = [
     component: Boards,
     meta: {
       title: "Boards",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/board/:uid",
+    name: "board",
+    component: Board,
+    meta: {
+      title: "Board",
       requiresAuth: true
     }
   },

@@ -3,24 +3,26 @@ import firebase from "firebase/app"
 import "firebase/auth"
 
 export default {
-  async getBoards() {
-    console.log("firebase: ")
-
-    // const citiesCol = collection(db, "boards")
-    // const citySnapshot = await getDocs(citiesCol)
-    // const cityList = citySnapshot.docs.map(doc => doc.data())
-    // return cityList
-
-    return true
+  getBoards() {
+    return db
+      .collection("boards")
+      .where("boardOwner", "==", "users/" + firebase.auth().currentUser.uid)
+      .get()
   },
-  createUser(registeredUser, payload) {
-    return db.collection("users").doc(registeredUser.user.uid).set({
-      email: payload.email
+  getBoard(payload) {
+    console.log(payload)
+    return db.collection("boards").doc(payload).get()
+  },
+  async createBoard(payload) {
+    const newBoard = await db.collection("boards").add({
+      boardTitle: payload,
+      boardOwner: "users/" + firebase.auth().currentUser.uid
     })
-  },
-  login(payload) {
-    return firebase
-      .auth()
-      .signInWithEmailAndPassword(payload.email, payload.password)
+
+    await db
+      .collection("boards")
+      .doc(newBoard.id)
+      .collection("expenses")
+      .add({ users: [], expenses: [] })
   }
 }
