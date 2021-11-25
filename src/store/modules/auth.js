@@ -40,6 +40,7 @@ export default {
       try {
         const registeredUser = await auth.registerUser(payload)
         await auth.createUser(registeredUser, payload)
+        await auth.checkIsUserInvited(registeredUser, payload.email)
 
         return { status: true, payload: null }
       } catch (error) {

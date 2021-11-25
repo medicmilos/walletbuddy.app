@@ -1,6 +1,6 @@
 <template>
   <div v-if="getBoard">
-    <p>{{ getBoard.boardTitle }} Board</p>
+    <p>{{ getBoard.data.boardTitle }} Board</p>
     <br />
     <v-divider />
     <br />
@@ -40,6 +40,7 @@
 
 <script>
 import Expense from "../../components/boards/Expense"
+
 export default {
   components: { Expense },
   name: "Boards",
@@ -69,7 +70,13 @@ export default {
     getBoardData(uid) {
       this.$store.dispatch("boards/getBoard", uid)
     },
-    inviteUserByEmail() {},
+    async inviteUserByEmail() {
+      this.$store.dispatch("boards/inviteUserToBoard", {
+        userEmail: this.userIntiveEmail,
+        boardUID: this.getBoard.id,
+        registered: false
+      })
+    },
     addStaticUser() {}
   }
 }

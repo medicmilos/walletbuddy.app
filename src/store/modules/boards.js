@@ -4,33 +4,63 @@ import boards from "../../api/apiCalls/boards"
 // import "firebase/auth"
 
 export default {
-  state: { boards: [], board: null },
+  state: { myBoards: [], sharedBoards: [], board: null },
   getters: {
-    getBoards(state) {
-      return state.boards
+    getMyBoards(state) {
+      return state.myBoards
+    },
+    getSharedBoards(state) {
+      return state.sharedBoards
     },
     getBoard(state) {
       return state.board
     }
   },
   mutations: {
-    setBoards(state, payload) {
-      state.boards = payload
+    setMyBoards(state, payload) {
+      state.myBoards = payload
+    },
+    setSharedBoards(state, payload) {
+      state.sharedBoards = payload
     },
     setBoard(state, payload) {
-      state.board = { boardTitle: payload.boardTitle }
+      state.board = { id: payload.id, data: payload.data() }
     }
   },
   actions: {
-    async getBoards({ commit }) {
+    async inviteUserToBoard(context, payload) {
       try {
-        const userBoards = await boards.getBoards()
+        const userBoards = await boards.inviteUserToBoard(payload)
+
+        return { status: true, payload: userBoards }
+      } catch (error) {
+        return { status: false, payload: error.message }
+      }
+    },
+    async getMyBoards({ commit }) {
+      try {
+        const userBoards = await boards.getMyBoards()
         let data = []
         userBoards.forEach(board => {
           data.push({ id: board.id, data: board.data() })
         })
 
-        commit("setBoards", data)
+        commit("setMyBoards", data)
+
+        return { status: true, payload: userBoards }
+      } catch (error) {
+        return { status: false, payload: error.message }
+      }
+    },
+    async getSharedBoards({ commit }) {
+      try {
+        const userBoards = await boards.getSharedBoards()
+        let data = []
+        userBoards.forEach(board => {
+          data.push({ id: board.id, data: board.data() })
+        })
+
+        commit("setSharedBoards", data)
 
         return { status: true, payload: userBoards }
       } catch (error) {
@@ -40,13 +70,8 @@ export default {
     async getBoard({ commit }, payload) {
       try {
         const board = await boards.getBoard(payload)
-        console.log("board: ", board.data())
-        // let data = []
-        // userBoards.forEach(board => {
-        //   data.push({ id: board.id, data: board.data() })
-        // })
 
-        commit("setBoard", board.data())
+        commit("setBoard", board)
 
         return { status: true, payload: 123 }
       } catch (error) {

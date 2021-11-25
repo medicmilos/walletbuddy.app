@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-link
-      v-for="board in getBoards"
+      v-for="board in getMyBoards"
       :key="board.id"
       :to="{
         name: 'board',
@@ -22,22 +22,22 @@
 export default {
   name: "Boards",
   computed: {
-    getBoards() {
-      return this.$store.getters["boards/getBoards"]
+    getMyBoards() {
+      return this.$store.getters["boards/getMyBoards"]
     }
   },
   data() {
     return { boardTitle: "" }
   },
   created() {
-    this.getBoardsData()
+    this.getMyBoardsData()
   },
   methods: {
     createBoard() {
       this.$store
         .dispatch("boards/createBoard", this.boardTitle)
         .then(response => {
-          this.getBoardsData()
+          this.getMyBoardsData()
           if (response.status) {
             //console.log("response success app: ", response.data)
           } else {
@@ -45,8 +45,8 @@ export default {
           }
         })
     },
-    getBoardsData() {
-      this.$store.dispatch("boards/getBoards")
+    getMyBoardsData() {
+      this.$store.dispatch("boards/getMyBoards")
     }
   }
 }
