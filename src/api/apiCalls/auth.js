@@ -45,7 +45,7 @@ export default {
         await db
           .collection("boards")
           .doc(invited.data.boardUID)
-          .collection("users")
+          .collection("usersOnBoard")
           .doc(registeredUser.user.uid)
           .set({ userEmail: email, userUID: registeredUser.user.uid })
       }

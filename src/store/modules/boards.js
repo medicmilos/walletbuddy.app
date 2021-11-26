@@ -55,12 +55,8 @@ export default {
     async getSharedBoards({ commit }) {
       try {
         const userBoards = await boards.getSharedBoards()
-        let data = []
-        userBoards.forEach(board => {
-          data.push({ id: board.id, data: board.data() })
-        })
 
-        commit("setSharedBoards", data)
+        commit("setSharedBoards", userBoards)
 
         return { status: true, payload: userBoards }
       } catch (error) {

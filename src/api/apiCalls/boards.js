@@ -8,14 +8,22 @@ export default {
       .collection("boards")
       .where("boardOwnerUID", "==", firebase.auth().currentUser.uid)
       .get()
+
     return query
   },
   async getSharedBoards() {
-    const query = await db
-      .collection("boards")
-      .where("users.userUID", "==", firebase.auth().currentUser.uid)
-      .get()
-    return query
+    const query = await db.collectionGroup("usersOnBoard").get()
+
+    let data = []
+    query.forEach(board => {
+      data.push({ id: board.id, data: board.data() })
+    })
+
+    data = data.filter(item => item.id == firebase.auth().currentUser.uid)
+
+    console.log("data: ", data)
+
+    return data
   },
   getBoard(payload) {
     return db.collection("boards").doc(payload).get()
@@ -23,7 +31,8 @@ export default {
   async createBoard(payload) {
     await db.collection("boards").add({
       boardTitle: payload,
-      boardOwnerUID: firebase.auth().currentUser.uid
+      boardOwnerUID: firebase.auth().currentUser.uid,
+      balance: 0
     })
 
     // await db

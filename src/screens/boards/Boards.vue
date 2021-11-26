@@ -1,7 +1,20 @@
 <template>
   <div>
+    <p>my boards</p>
     <router-link
       v-for="board in getMyBoards"
+      :key="board.id"
+      :to="{
+        name: 'board',
+        params: { uid: board.id }
+      }"
+    >
+      <p>{{ board.id }}</p>
+    </router-link>
+    <br />
+    <p>boards shared with me</p>
+    <router-link
+      v-for="board in getSharedBoards"
       :key="board.id"
       :to="{
         name: 'board',
@@ -24,6 +37,9 @@ export default {
   computed: {
     getMyBoards() {
       return this.$store.getters["boards/getMyBoards"]
+    },
+    getSharedBoards() {
+      return this.$store.getters["boards/getSharedBoards"]
     }
   },
   data() {
@@ -31,6 +47,7 @@ export default {
   },
   created() {
     this.getMyBoardsData()
+    this.getSharedBoardsData()
   },
   methods: {
     createBoard() {
@@ -47,6 +64,9 @@ export default {
     },
     getMyBoardsData() {
       this.$store.dispatch("boards/getMyBoards")
+    },
+    getSharedBoardsData() {
+      this.$store.dispatch("boards/getSharedBoards")
     }
   }
 }
