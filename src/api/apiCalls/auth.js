@@ -1,24 +1,54 @@
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  signInWithEmailAndPassword,
-  signOut
-} from "firebase/auth"
+import db from "../../firebase/firebaseInit"
+import firebase from "firebase/app"
+import "firebase/auth"
 
 export default {
-  getAuth() {
-    return getAuth()
-  },
   login(payload) {
-    const auth = getAuth()
-    return signInWithEmailAndPassword(auth, payload.email, payload.password)
+    return firebase
+      .auth()
+      .signInWithEmailAndPassword(payload.email, payload.password)
   },
-  register(payload) {
-    const auth = getAuth()
-    return createUserWithEmailAndPassword(auth, payload.email, payload.password)
+  registerUser(payload) {
+    return firebase
+      .auth()
+      .createUserWithEmailAndPassword(payload.email, payload.password)
+  },
+  createUser(registeredUser, payload) {
+    return db.collection("users").doc(registeredUser.user.uid).set({
+      userEmail: payload.email,
+      userUID: registeredUser.user.uid
+    })
+  },
+  forgotPassword(payload) {
+    return firebase.auth().sendPasswordResetEmail(payload.email)
   },
   logout() {
-    const auth = getAuth()
-    return signOut(auth)
+    return firebase.auth().signOut()
+  },
+  async checkIsUserInvited(registeredUser, email) {
+    const userInvite = await db
+      .collection("usersInvites")
+      .where("userEmail", "==", email)
+      .get()
+
+    let invited = null
+    userInvite.forEach(user => {
+      invited = { id: user.id, data: user.data() }
+    })
+
+    if (invited) {
+      if (!invited.registered) {
+        await db.collection("usersInvites").doc(invited.id).update({
+          registered: true
+        })
+
+        await db
+          .collection("boards")
+          .doc(invited.data.boardUID)
+          .collection("usersOnBoard")
+          .doc(registeredUser.user.uid)
+          .set({ userEmail: email, userUID: registeredUser.user.uid })
+      }
+    }
   }
 }

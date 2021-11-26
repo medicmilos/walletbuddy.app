@@ -1,7 +1,12 @@
+import firebase from "firebase/app"
+import "firebase/auth"
+
 import auth from "../../api/apiCalls/auth"
 
 export default {
-  state: { isAuthenticated: false },
+  state: {
+    isAuthenticated: false
+  },
   getters: {
     isAuthenticated(state) {
       return state.isAuthenticated
@@ -13,9 +18,10 @@ export default {
     }
   },
   actions: {
-    checkIsAuthenticated(context) {
+    async checkIsAuthenticated(context) {
       try {
-        const user = auth.getAuth().currentUser
+        const user = firebase.auth().currentUser
+
         context.commit("setIsAuthenticated", !!user)
       } catch (error) {
         console.log(error.message)
@@ -24,6 +30,7 @@ export default {
     async login(context, payload) {
       try {
         const response = await auth.login(payload)
+
         return { status: true, payload: response }
       } catch (error) {
         return { status: false, payload: error.message }
@@ -31,7 +38,19 @@ export default {
     },
     async register(context, payload) {
       try {
-        const response = await auth.register(payload)
+        const registeredUser = await auth.registerUser(payload)
+        await auth.createUser(registeredUser, payload)
+        await auth.checkIsUserInvited(registeredUser, payload.email)
+
+        return { status: true, payload: null }
+      } catch (error) {
+        return { status: false, payload: error.message }
+      }
+    },
+    async forgotPassword(context, payload) {
+      try {
+        const response = await auth.forgotPassword(payload)
+
         return { status: true, payload: response }
       } catch (error) {
         return { status: false, payload: error.message }
@@ -40,6 +59,7 @@ export default {
     async logout() {
       try {
         const response = await auth.logout()
+
         return { status: true, payload: response }
       } catch (error) {
         return { status: false, payload: error.message }

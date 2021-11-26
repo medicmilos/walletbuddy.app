@@ -8,13 +8,13 @@
       v-if="isAuthenticated"
       class="drawer-color"
     >
-      <v-list-item class="px-2">
+      <v-list-item class="px-2" v-if="email">
         <v-list-item-avatar>
           <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-title class="drawerText--text">
-          Milos Medic
+          {{ email }}
         </v-list-item-title>
 
         <v-btn icon @click.stop="mini = !mini">
@@ -62,6 +62,8 @@
 
 <script>
 import DashboardItem from "../../components/dashboard/DashboardItem.vue"
+import firebase from "firebase/app"
+import "firebase/auth"
 
 export default {
   name: "Dashboard",
@@ -82,6 +84,12 @@ export default {
         },
         {
           id: 2,
+          routeName: "boards",
+          icon: "mdi-home-city",
+          title: "Boards"
+        },
+        {
+          id: 3,
           routeName: "settings",
           icon: "mdi-cog",
           title: "Settings"
@@ -92,9 +100,18 @@ export default {
   computed: {
     isAuthenticated() {
       return this.$store.getters["auth/isAuthenticated"]
+    },
+    email() {
+      return this.$store.getters["auth/email"]
     }
   },
   created() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.$store.dispatch("settings/getCurrentUser")
+      }
+    })
+
     this.$root.$on("actionResponse", (type, data) => {
       this.snackbarType = type
       this.snackbarText = data
