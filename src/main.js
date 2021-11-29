@@ -32,6 +32,7 @@ firebase.auth().onAuthStateChanged(() => {
         theme: {
           themes: {
             light: {
+              auth: "#452650",
               primary: "#2e0d34",
               pinkButton: "#e1567c",
               purpleButton: "#6d5ec7",
