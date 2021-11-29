@@ -17,6 +17,6 @@ RUN npm install -g http-server
 WORKDIR /app
 COPY package*.json ./
 COPY . .
-RUN npm run build
+RUN yarn run build
 EXPOSE 80
 CMD [ "http-server", "dist" ]
