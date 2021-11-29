@@ -49,7 +49,7 @@
                       placeholder="Password"
                     ></v-text-field>
                   </validation-provider>
-                  <!-- <router-link
+                  <router-link
                     :to="{
                       name: 'forgot-password'
                     }"
@@ -66,7 +66,7 @@
                     <p class="subtitle-2">
                       Not on WalletBuddy yet? Create an account
                     </p>
-                  </router-link> -->
+                  </router-link>
                 </v-card-text>
                 <v-card-actions>
                   <v-btn
