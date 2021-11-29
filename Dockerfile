@@ -17,6 +17,6 @@ RUN npm install -g http-server
 WORKDIR /app
 COPY package*.json ./
 COPY . .
-RUN yarn run build
+RUN vue-cli-service build
 EXPOSE 80
 CMD [ "http-server", "dist" ]
