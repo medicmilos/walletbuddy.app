@@ -8,6 +8,7 @@ import Boards from "../screens/boards/Boards"
 import ComingSoon from "../screens/ComingSoon"
 import ForgotPassword from "../screens/auth/ForgotPassword"
 import Home from "../screens/Home"
+import Landing from "../screens/landing/Landing"
 import Login from "../screens/auth/Login"
 import Register from "../screens/auth/Register"
 import Settings from "../screens/settings/Settings"
@@ -17,22 +18,28 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: "/",
-    redirect: "/home"
+    redirect: "/app"
   },
   {
     path: "/comingsoon",
     name: "comingsoon",
     component: ComingSoon,
-    meta: { title: "Page", requiresAuth: false }
+    meta: { title: "Coming Soon", requiresAuth: false }
   },
   {
-    path: "/signin",
+    path: "/app",
+    name: "landing",
+    component: Landing,
+    meta: { title: "Welcome", requiresAuth: false }
+  },
+  {
+    path: "/auth/signin",
     name: "login",
     component: Login,
     meta: { title: "Sign in", requiresAuth: false }
   },
   {
-    path: "/signup",
+    path: "/auth/signup",
     name: "register",
     component: Register,
     meta: {
@@ -41,7 +48,7 @@ const routes = [
     }
   },
   {
-    path: "/forgot-password",
+    path: "/auth/forgot-password",
     name: "forgot-password",
     component: ForgotPassword,
     meta: {
@@ -50,7 +57,7 @@ const routes = [
     }
   },
   {
-    path: "/home",
+    path: "/app/home",
     name: "home",
     component: Home,
     meta: {
@@ -59,7 +66,7 @@ const routes = [
     }
   },
   {
-    path: "/boards",
+    path: "/app/boards",
     name: "boards",
     component: Boards,
     meta: {
@@ -68,7 +75,7 @@ const routes = [
     }
   },
   {
-    path: "/board/:uid",
+    path: "/app/boards/board/:uid",
     name: "board",
     component: Board,
     meta: {
@@ -77,7 +84,7 @@ const routes = [
     }
   },
   {
-    path: "/settings",
+    path: "/app/settings",
     name: "settings",
     component: Settings,
     meta: {
@@ -87,7 +94,7 @@ const routes = [
   },
   {
     path: "*",
-    component: Home,
+    component: Landing,
     meta: {
       title: "Page",
       requiresAuth: true
@@ -105,7 +112,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = `${to.meta.title} | FireBlog`
+  document.title = `${to.meta.title} | WalletBuddy`
   next()
 })
 
@@ -123,7 +130,7 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     if ((to.name === "login" || to.name === "register") && currentUser) {
-      next({ name: "home" })
+      next({ name: "landing" })
     } else {
       next()
     }

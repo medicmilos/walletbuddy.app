@@ -8,13 +8,13 @@
       v-if="isAuthenticated"
       class="drawer-color"
     >
-      <v-list-item class="px-2" v-if="email">
+      <v-list-item class="px-2">
         <v-list-item-avatar>
           <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-title class="drawerText--text">
-          {{ email }}
+          aaaaaaaaaaaaa
         </v-list-item-title>
 
         <v-btn icon @click.stop="mini = !mini">
@@ -44,18 +44,16 @@
     </v-navigation-drawer>
 
     <v-main>
-      <v-container fluid fill-height>
-        <v-layout child-flex xs12>
-          <router-view></router-view>
-        </v-layout>
-        <v-snackbar
-          v-model="snackbar"
-          :color="snackbarType ? 'success' : 'error'"
-        >
-          {{ snackbarText }}
-          <v-btn dark text @click="snackbar = false">Zatvori</v-btn>
-        </v-snackbar>
-      </v-container>
+      <v-layout child-flex xs12>
+        <router-view></router-view>
+      </v-layout>
+      <v-snackbar
+        v-model="snackbar"
+        :color="snackbarType ? 'success' : 'error'"
+      >
+        {{ snackbarText }}
+        <v-btn dark text @click="snackbar = false">Zatvori</v-btn>
+      </v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -100,9 +98,6 @@ export default {
   computed: {
     isAuthenticated() {
       return this.$store.getters["auth/isAuthenticated"]
-    },
-    email() {
-      return this.$store.getters["auth/email"]
     }
   },
   created() {

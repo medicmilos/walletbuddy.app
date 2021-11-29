@@ -1,10 +1,10 @@
 <template>
-  <v-main>
+  <div class="auth-page">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
           <v-card>
-            <v-toolbar color="primary" dark flat>
+            <v-toolbar color="auth" dark flat>
               <v-toolbar-title>Sign up</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-toolbar>
@@ -77,7 +77,7 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </v-main>
+  </div>
 </template>
 
 <script>

@@ -1,10 +1,10 @@
 <template>
-  <v-main>
+  <div class="auth-page">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
           <v-card>
-            <v-toolbar color="primary" dark flat>
+            <v-toolbar color="auth" dark flat>
               <v-toolbar-title>Sign in</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-toolbar>
@@ -49,7 +49,7 @@
                       placeholder="Password"
                     ></v-text-field>
                   </validation-provider>
-                  <router-link
+                  <!-- <router-link
                     :to="{
                       name: 'forgot-password'
                     }"
@@ -66,7 +66,7 @@
                     <p class="subtitle-2">
                       Not on WalletBuddy yet? Create an account
                     </p>
-                  </router-link>
+                  </router-link> -->
                 </v-card-text>
                 <v-card-actions>
                   <v-btn
@@ -78,6 +78,14 @@
                   >
                     Continue
                   </v-btn>
+                  <v-spacer />
+                  <v-icon
+                    @click="goToHome"
+                    class="home-icon"
+                    color="drawerIcon"
+                  >
+                    mdi-home-city
+                  </v-icon>
                 </v-card-actions>
               </form>
             </validation-observer>
@@ -85,7 +93,7 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </v-main>
+  </div>
 </template>
 
 <script>
@@ -94,8 +102,8 @@ export default {
   computed: {},
   data() {
     return {
-      email: "milosmedicdev@gmail.com",
-      password: "milosmedic",
+      email: "",
+      password: "",
       eye: false,
       loading: false
     }
@@ -117,9 +125,27 @@ export default {
           this.$root.$emit("actionResponse", 0, response.payload)
         }
       })
+    },
+    goToHome() {
+      this.$router.push({ name: "landing" })
     }
   }
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.auth-page {
+  height: 100vh;
+  position: relative;
+  background: url("../../assets/pattern.png") 0px 0px / 300px 300px,
+    linear-gradient(315deg, rgb(24, 13, 28) 0.57%, rgb(69, 38, 80) 100%) 0% 0% /
+      cover;
+  header {
+    border-radius: 0 !important;
+  }
+
+  .home-icon {
+    cursor: pointer;
+  }
+}
+</style>
