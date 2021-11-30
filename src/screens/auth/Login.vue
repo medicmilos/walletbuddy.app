@@ -137,7 +137,7 @@ export default {
 .auth-page {
   height: 100vh;
   position: relative;
-  background: url("/assets/pattern.png") 0px 0px / 300px 300px,
+  background: url("../../assets/pattern.png") 0px 0px / 300px 300px,
     linear-gradient(315deg, rgb(24, 13, 28) 0.57%, rgb(69, 38, 80) 100%) 0% 0% /
       cover;
   header {
