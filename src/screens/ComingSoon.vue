@@ -11,7 +11,7 @@
 <script>
 export default {
   name: "ComingSoon",
-  computed: {}, 
+  computed: {},
   data() {
     return {}
   },

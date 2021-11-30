@@ -1,7 +1,7 @@
 <template>
   <div class="landing-page">
     <div class="content">
-      <img src="assets/pattern.png" />
+      <img src="@/assets/pattern.png" />
       <h1>WalletBuddy</h1>
       <p>Expenses Management App</p>
       <button @click="goToAuth" class="get-started">Get Started</button>
