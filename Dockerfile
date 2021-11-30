@@ -20,7 +20,6 @@ COPY package*.json ./
 RUN npm install 
 COPY . ./ 
 RUN npm run build
-WORKDIR /usr/src/app/dist
 EXPOSE 80
 CMD [ "http-server", "dist" ]
 
