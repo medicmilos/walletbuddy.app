@@ -10,10 +10,9 @@
 #CMD [ "node", "nodeServer.js" ]
 
 FROM node:lts-alpine
-ENV HOST=0.0.0.0
-WORKDIR /app
+WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
-COPY . .
+COPY . ./
 EXPOSE 80
 ENTRYPOINT [ "npm", "run", "dev" ]
