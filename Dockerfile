@@ -22,7 +22,3 @@ FROM nginx:stable-alpine as production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
-
-WORKDIR /usr/src/app/dist
-EXPOSE 80
-CMD [ "http-server", "dist" ]
