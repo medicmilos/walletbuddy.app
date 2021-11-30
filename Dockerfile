@@ -8,3 +8,4 @@ COPY nodeServer.js dist/nodeServer.js
 WORKDIR /usr/src/app/dist
 EXPOSE 80
 CMD [ "node", "nodeServer.js" ]
+#end
