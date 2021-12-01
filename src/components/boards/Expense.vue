@@ -68,8 +68,6 @@
     </div>
     <br />
     <br />
-    <br />
-    <br />
     <v-btn @click="makeTransaction">MAKE TRANSACTION</v-btn>
   </div>
 </template>
@@ -101,12 +99,15 @@ export default {
         user: null,
         amount: null
       })
-      console.log(this.inputs)
     },
     removeCustomUser(index) {
       this.exepnseCustomusers.splice(index, 1)
     },
-    makeTransaction() {}
+    makeTransaction() {
+      this.$store.dispatch("transactions/makeTransaction", 11111).then(() => {
+        this.$root.$emit("actionResponse", 1, "success")
+      })
+    }
   }
 }
 </script>

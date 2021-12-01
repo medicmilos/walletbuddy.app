@@ -1,69 +1,83 @@
-import firebase from "firebase/app"
-import "firebase/auth"
-
-import auth from "../../api/apiCalls/auth"
+import api from "../../api/apiCalls"
+import jwtService from "../../api/jwtService"
 
 export default {
   state: {
-    isAuthenticated: false
+    isAuthenticated: !!jwtService.getToken(),
+    currentUser: null
   },
   getters: {
     isAuthenticated(state) {
       return state.isAuthenticated
+    },
+    getCurrentUser(state) {
+      return state.currentUser
     }
   },
   mutations: {
-    setIsAuthenticated(state, payload) {
-      state.isAuthenticated = payload
+    setAuth(state, data) {
+      state.isAuthenticated = true
+      jwtService.setToken(data.token)
+      jwtService.setAxiosToken()
+    },
+    resetAuth(state) {
+      state.isAuthenticated = false
+      jwtService.unsetToken()
+    },
+    setCurrentUser(state, payload) {
+      state.currentUser = payload
     }
   },
   actions: {
-    async checkIsAuthenticated(context) {
-      try {
-        const user = firebase.auth().currentUser
-
-        context.commit("setIsAuthenticated", !!user)
-      } catch (error) {
-        console.log(error.message)
-      }
+    login({ commit }, payload) {
+      return api
+        .login(payload)
+        .then(response => {
+          commit("setAuth", {
+            token: response.token
+          })
+          return { status: true, data: response }
+        })
+        .catch(error => {
+          console.log("asd", error.response.data.message)
+          return { status: false, data: error.response.data.message }
+        })
     },
-    async login(context, payload) {
-      try {
-        const response = await auth.login(payload)
-
-        return { status: true, payload: response }
-      } catch (error) {
-        return { status: false, payload: error.message }
-      }
+    register({ commit }, payload) {
+      return api
+        .register(payload)
+        .then(response => {
+          commit("setAuth", {
+            token: response.token
+          })
+          return { status: true, data: response }
+        })
+        .catch(error => {
+          return { status: false, data: error.response.data.message }
+        })
     },
-    async register(context, payload) {
-      try {
-        const registeredUser = await auth.registerUser(payload)
-        await auth.createUser(registeredUser, payload)
-        await auth.checkIsUserInvited(registeredUser, payload.email)
-
-        return { status: true, payload: null }
-      } catch (error) {
-        return { status: false, payload: error.message }
-      }
+    getCurrentUser({ commit }) {
+      return api
+        .getCurrentUser()
+        .then(response => {
+          commit("setCurrentUser", response)
+          return { status: true, data: response }
+        })
+        .catch(error => {
+          return { status: false, data: error.response.data.message }
+        })
     },
-    async forgotPassword(context, payload) {
-      try {
-        const response = await auth.forgotPassword(payload)
-
-        return { status: true, payload: response }
-      } catch (error) {
-        return { status: false, payload: error.message }
-      }
+    logout({ commit }) {
+      commit("resetAuth")
+      return true
     },
-    async logout() {
-      try {
-        const response = await auth.logout()
-
-        return { status: true, payload: response }
-      } catch (error) {
-        return { status: false, payload: error.message }
+    checkAuth({ commit }) {
+      if (!jwtService.getToken()) {
+        commit("resetAuth")
+        return false
       }
+
+      return true
     }
   },
   namespaced: true

@@ -1,17 +1,13 @@
-import firebase from "firebase/app"
 import store from "../store"
 import Vue from "vue"
 import VueRouter from "vue-router"
 
 import Board from "../screens/boards/Board"
 import Boards from "../screens/boards/Boards"
-import ComingSoon from "../screens/ComingSoon"
 import ForgotPassword from "../screens/auth/ForgotPassword"
-import Home from "../screens/Home"
 import Landing from "../screens/landing/Landing"
 import Login from "../screens/auth/Login"
 import Register from "../screens/auth/Register"
-import Settings from "../screens/settings/Settings"
 
 Vue.use(VueRouter)
 
@@ -19,12 +15,6 @@ const routes = [
   {
     path: "/",
     redirect: "/app"
-  },
-  {
-    path: "/comingsoon",
-    name: "comingsoon",
-    component: ComingSoon,
-    meta: { title: "Coming Soon", requiresAuth: false }
   },
   {
     path: "/app",
@@ -57,15 +47,6 @@ const routes = [
     }
   },
   {
-    path: "/app/home",
-    name: "home",
-    component: Home,
-    meta: {
-      title: "Home",
-      requiresAuth: true
-    }
-  },
-  {
     path: "/app/boards",
     name: "boards",
     component: Boards,
@@ -75,20 +56,11 @@ const routes = [
     }
   },
   {
-    path: "/app/boards/board/:uid",
+    path: "/app/boards/:uid",
     name: "board",
     component: Board,
     meta: {
       title: "Board",
-      requiresAuth: true
-    }
-  },
-  {
-    path: "/app/settings",
-    name: "settings",
-    component: Settings,
-    meta: {
-      title: "Settings",
       requiresAuth: true
     }
   },
@@ -116,25 +88,39 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-router.beforeEach(async (to, from, next) => {
-  const currentUser = firebase.auth().currentUser
-  const requiresAuth = to.matched.some(res => res.meta.requiresAuth)
+router.beforeEach((to, from, next) => {
+  if (
+    (to.name === "login" || to.name === "register") &&
+    store.getters["auth/isAuthenticated"]
+  ) {
+    next({ name: "boards" })
+  } else {
+    next()
+  }
+})
 
-  store.dispatch("auth/checkIsAuthenticated")
+router.beforeEach((to, from, next) => {
+  let access = store.getters["auth/isAuthenticated"]
 
-  if (requiresAuth) {
-    if (currentUser) {
+  if (to.meta.requiresAuth) {
+    if (access) {
       next()
     } else {
       next({ name: "login" })
     }
   } else {
-    if ((to.name === "login" || to.name === "register") && currentUser) {
-      next({ name: "landing" })
-    } else {
+    if (to.name !== null) {
       next()
+    } else {
+      next({ name: "login" })
     }
   }
+})
+
+router.beforeEach((to, from, next) => {
+  store.dispatch("auth/checkAuth").then(() => {
+    next()
+  })
 })
 
 export default router

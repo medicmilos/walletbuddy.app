@@ -13,8 +13,8 @@
           <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
         </v-list-item-avatar>
 
-        <v-list-item-title class="drawerText--text">
-          aaaaaaaaaaaaa
+        <v-list-item-title v-if="getCurrentUser" class="drawerText--text">
+          {{ getCurrentUser.name }}
         </v-list-item-title>
 
         <v-btn icon @click.stop="mini = !mini">
@@ -44,7 +44,7 @@
     </v-navigation-drawer>
 
     <v-main>
-      <v-layout child-flex xs12>
+      <v-layout v-if="getCurrentUser" child-flex xs12>
         <router-view></router-view>
       </v-layout>
       <v-snackbar
@@ -60,8 +60,6 @@
 
 <script>
 import DashboardItem from "../../components/dashboard/DashboardItem.vue"
-import firebase from "firebase/app"
-import "firebase/auth"
 
 export default {
   name: "Dashboard",
@@ -76,21 +74,9 @@ export default {
       drawerItems: [
         {
           id: 1,
-          routeName: "home",
-          icon: "mdi-home-city",
-          title: "Home"
-        },
-        {
-          id: 2,
           routeName: "boards",
           icon: "mdi-home-city",
           title: "Boards"
-        },
-        {
-          id: 3,
-          routeName: "settings",
-          icon: "mdi-cog",
-          title: "Settings"
         }
       ]
     }
@@ -98,14 +84,13 @@ export default {
   computed: {
     isAuthenticated() {
       return this.$store.getters["auth/isAuthenticated"]
+    },
+    getCurrentUser() {
+      return this.$store.getters["auth/getCurrentUser"]
     }
   },
   created() {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.$store.dispatch("settings/getCurrentUser")
-      }
-    })
+    this.$store.dispatch("auth/getCurrentUser")
 
     this.$root.$on("actionResponse", (type, data) => {
       this.snackbarType = type

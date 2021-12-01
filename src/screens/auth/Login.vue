@@ -120,9 +120,9 @@ export default {
       this.$store.dispatch("auth/login", payload).then(response => {
         this.loading = false
         if (response.status) {
-          this.$router.push({ name: "home" })
+          this.$router.push({ name: "boards" })
         } else {
-          this.$root.$emit("actionResponse", 0, response.payload)
+          this.$root.$emit("actionResponse", 0, response.data)
         }
       })
     },
