@@ -19,6 +19,20 @@
                 <v-card-text class="pa-2 pb-0">
                   <validation-provider
                     v-slot="{ errors }"
+                    name="name"
+                    rules="required"
+                  >
+                    <v-text-field
+                      v-model="name"
+                      :error-messages="errors"
+                      @keydown.enter.native="register"
+                      prepend-icon="mdi-bell"
+                      label="Name"
+                      placeholder="Name"
+                    ></v-text-field>
+                  </validation-provider>
+                  <validation-provider
+                    v-slot="{ errors }"
                     name="email"
                     rules="required|email"
                   >
@@ -86,6 +100,7 @@ export default {
   computed: {},
   data() {
     return {
+      name: "",
       email: "",
       password: "",
       eye: false,
@@ -98,6 +113,7 @@ export default {
       this.loading = true
 
       let payload = {
+        name: this.name,
         email: this.email,
         password: this.password
       }
@@ -105,9 +121,9 @@ export default {
       this.$store.dispatch("auth/register", payload).then(response => {
         this.loading = false
         if (response.status) {
-          this.$router.push({ name: "home" })
+          this.$router.push({ name: "boards" })
         } else {
-          this.$root.$emit("actionResponse", 0, response.payload)
+          this.$root.$emit("actionResponse", 0, response.data)
         }
       })
     }

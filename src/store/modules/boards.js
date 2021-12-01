@@ -1,7 +1,4 @@
-import boards from "../../api/apiCalls/boards"
-
-// import firebase from "firebase/app"
-// import "firebase/auth"
+import api from "../../api/apiCalls"
 
 export default {
   state: { myBoards: [], sharedBoards: [], board: null },
@@ -24,64 +21,65 @@ export default {
       state.sharedBoards = payload
     },
     setBoard(state, payload) {
-      state.board = { id: payload.id, data: payload.data() }
+      state.board = payload
     }
   },
   actions: {
     async inviteUserToBoard(context, payload) {
-      try {
-        const userBoards = await boards.inviteUserToBoard(payload)
-
-        return { status: true, payload: userBoards }
-      } catch (error) {
-        return { status: false, payload: error.message }
-      }
-    },
-    async getMyBoards({ commit }) {
-      try {
-        const userBoards = await boards.getMyBoards()
-        let data = []
-        userBoards.forEach(board => {
-          data.push({ id: board.id, data: board.data() })
+      return api
+        .inviteUserToBoard(payload)
+        .then(response => {
+          return { status: true, data: response.data }
         })
-
-        commit("setMyBoards", data)
-
-        return { status: true, payload: userBoards }
-      } catch (error) {
-        return { status: false, payload: error.message }
-      }
+        .catch(error => {
+          return { status: false, data: error }
+        })
     },
-    async getSharedBoards({ commit }) {
-      try {
-        const userBoards = await boards.getSharedBoards()
+    async getMyBoards({ commit }, payload) {
+      return api
+        .getMyBoards(payload)
+        .then(response => {
+          commit("setMyBoards", response)
 
-        commit("setSharedBoards", userBoards)
+          return { status: true, data: response.data }
+        })
+        .catch(error => {
+          return { status: false, data: error }
+        })
+    },
+    async getSharedBoards({ commit }, payload) {
+      return api
+        .getSharedBoards(payload)
+        .then(response => {
+          commit("setSharedBoards", response)
 
-        return { status: true, payload: userBoards }
-      } catch (error) {
-        return { status: false, payload: error.message }
-      }
+          return { status: true, data: response.data }
+        })
+        .catch(error => {
+          return { status: false, data: error }
+        })
     },
     async getBoard({ commit }, payload) {
-      try {
-        const board = await boards.getBoard(payload)
+      return api
+        .getBoard(payload)
+        .then(response => {
+          commit("setBoard", response[0])
 
-        commit("setBoard", board)
-
-        return { status: true, payload: 123 }
-      } catch (error) {
-        return { status: false, payload: error.message }
-      }
+          return { status: true, data: response.data }
+        })
+        .catch(error => {
+          return { status: false, data: error }
+        })
     },
-    async createBoard(context, payload) {
-      try {
-        const response = await boards.createBoard(payload)
-
-        return { status: true, payload: response }
-      } catch (error) {
-        return { status: false, payload: error.message }
-      }
+    async createNewBoard(context, payload) {
+      return api
+        .createNewBoard(payload)
+        .then(response => {
+          return { status: true, data: response }
+        })
+        .catch(error => {
+          return { status: false, data: error }
+        })
     }
   },
   namespaced: true

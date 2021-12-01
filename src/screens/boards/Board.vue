@@ -1,41 +1,30 @@
 <template>
-  <div v-if="getBoard">
-    <p>{{ getBoard.data.boardTitle }} Board</p>
-    <br />
+  <v-container v-if="getBoard">
+    <p class="text-h5 font-weight-black">Board: {{ getBoard.title }}</p>
+    <p class="text-h6 font-weight-black mb-0">
+      Board Ballance: {{ getBoard.ballance }} RSD
+    </p>
+    <p class="text-h6 font-weight-black">My Ballance: 1 RSD</p>
     <v-divider />
-    <br />
-    <br />
-    <br />
-    <p>INVITE USERS TO BOARD</p>
-    <v-text-field
-      class="col-6"
-      label="userIntiveEmail"
-      v-model="userIntiveEmail"
-    />
-    <v-btn @click="inviteUserByEmail">INVITE</v-btn>
-    <br />
-    <br />
-    <p>ADD STATIC USERS TO BOARD</p>
-    <v-text-field class="col-6" label="staticUserName" v-model="staticUser" />
-    <v-btn @click="addStaticUser">ADD</v-btn>
-    <br />
-    <br />
+    <p class="text-h5 font-weight-black mt-10">INVITE USERS TO BOARD</p>
     <v-divider />
-    <br />
-    <br />
-    <br />
-    <p>MAKE TRANSACTION</p>
-    <Expense :boardUsers="boardUsers" />
-    <br />
-    <br />
-    <br />
-    <br />
-
-    <br />
-    <br />
+    <v-row class="pt-5">
+      <v-text-field
+        class="col-6"
+        label="userIntiveEmail"
+        v-model="userIntiveEmail"
+      />
+      <v-btn @click="inviteUserByEmail">INVITE</v-btn>
+    </v-row>
+    <p class="text-h5 font-weight-black mt-10">MAKE TRANSACTION</p>
     <v-divider />
+    <v-row class="pt-5">
+      <Expense :boardUsers="boardUsers" />
+    </v-row>
+    <p class="text-h5 font-weight-black mt-10">BOARD TRANSACTIONS</p>
     <v-divider />
-  </div>
+    <v-row class="pt-5">.......................</v-row>
+  </v-container>
 </template>
 
 <script>
@@ -71,11 +60,14 @@ export default {
       this.$store.dispatch("boards/getBoard", uid)
     },
     async inviteUserByEmail() {
-      this.$store.dispatch("boards/inviteUserToBoard", {
-        userEmail: this.userIntiveEmail,
-        boardUID: this.getBoard.id,
-        registered: false
-      })
+      this.$store
+        .dispatch("boards/inviteUserToBoard", {
+          userEmail: this.userIntiveEmail,
+          boardUID: this.getBoard._id
+        })
+        .then(() => {
+          this.$root.$emit("actionResponse", 1, "User invited")
+        })
     },
     addStaticUser() {}
   }
