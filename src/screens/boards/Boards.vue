@@ -1,6 +1,19 @@
 <template>
   <v-container>
-    <p class="text-h5 font-weight-black">My boards</p>
+    <p class="text-h5 font-weight-black mt-10">Create new board</p>
+    <v-divider />
+    <v-row class="pt-5 d-flex align-center">
+      <v-text-field
+        class="col-4"
+        @keydown.enter.native="createBoard"
+        v-model="boardTitle"
+        label="Board title"
+      />
+      <v-btn @click="createBoard" :disabled="loading" color="primary">
+        create
+      </v-btn>
+    </v-row>
+    <p class="text-h5 font-weight-black mt-5">My boards</p>
     <v-divider />
     <v-row class="pt-5" v-if="getMyBoards.length">
       <v-col v-for="board in getMyBoards" :key="board.id" cols="3" xs="12">
@@ -44,19 +57,6 @@
       </v-col>
     </v-row>
     <p v-else class="mt-1">No boards to show.</p>
-    <p class="text-h5 font-weight-black mt-10">Create new board</p>
-    <v-divider />
-    <v-row class="pt-5 d-flex align-center">
-      <v-text-field
-        class="col-4"
-        @keydown.enter.native="createBoard"
-        v-model="boardTitle"
-        label="Board title"
-      />
-      <v-btn @click="createBoard" :disabled="loading" color="primary">
-        create
-      </v-btn>
-    </v-row>
   </v-container>
 </template>
 
@@ -77,9 +77,12 @@ export default {
   data() {
     return { boardTitle: "", loading: false }
   },
-  created() {
-    this.getMyBoardsData()
-    this.getSharedBoardsData()
+  created() {},
+  watch: {
+    getCurrentUser() {
+      this.getMyBoardsData()
+      this.getSharedBoardsData()
+    }
   },
   methods: {
     createBoard() {

@@ -6,9 +6,9 @@
       label="Transaction Type"
       persistent-hint
     ></v-select>
-    <v-text-field label="Title" v-model="title" />
+    <v-text-field label="Name" v-model="name" />
     <v-text-field label="Amount" v-model="amount" />
-    <div v-if="transactionType == 'income'">
+    <div v-if="transactionType == 'Income'">
       <v-select
         v-model="incomeToUser"
         :items="boardUsers"
@@ -22,14 +22,14 @@
         persistent-hint
       ></v-select>
     </div>
-    <div v-else-if="transactionType == 'expense'">
+    <div v-else-if="transactionType == 'Expense'">
       <v-select
         v-model="expenseType"
         :items="expenseTypeData"
         label="Expense Type"
         persistent-hint
       ></v-select>
-      <div v-if="expenseType == 'single'">
+      <div v-if="expenseType == 'Single'">
         <v-select
           v-model="expenseFromUser"
           :items="boardUsers"
@@ -37,7 +37,7 @@
           persistent-hint
         ></v-select>
       </div>
-      <div v-else-if="expenseType == 'split all'">
+      <div v-else-if="expenseType == 'Split all'">
         <v-select
           v-model="expenseFromUsers"
           :items="boardUsers"
@@ -47,7 +47,7 @@
           persistent-hint
         ></v-select>
       </div>
-      <div v-else-if="expenseType == 'split custom'">
+      <div v-else-if="expenseType == 'Custom split'">
         <div
           class="d-flex"
           v-for="(user, index) in exepnseCustomusers"
@@ -75,15 +75,15 @@
 <script>
 export default {
   name: "Expense",
-  props: { boardUsers: Array },
+  props: { board: Object, boardUsers: Array },
   computed: {},
   data() {
     return {
-      transactionType: "expense",
-      transactionTypeData: ["income", "expense"],
-      expenseType: "split custom",
-      expenseTypeData: ["single", "split all", "split custom"],
-      title: null,
+      transactionType: "Expense",
+      transactionTypeData: ["Income", "Expense"],
+      expenseType: "Single",
+      expenseTypeData: ["Single", "Split all", "Custom split"],
+      name: null,
       amount: null,
       incomeToUser: null,
       incomeFromUser: null,
@@ -93,6 +93,13 @@ export default {
     }
   },
   created() {},
+  watch: {
+    expenseType() {
+      this.expenseFromUser = null
+      this.expenseFromUsers = null
+      this.exepnseCustomusers = []
+    }
+  },
   methods: {
     addCustomUser() {
       this.exepnseCustomusers.push({
@@ -104,9 +111,30 @@ export default {
       this.exepnseCustomusers.splice(index, 1)
     },
     makeTransaction() {
-      this.$store.dispatch("transactions/makeTransaction", 11111).then(() => {
+      const data = {
+        boardUID: this.board._id,
+        name: this.name,
+        amount: parseFloat(this.amount),
+        fromUser: this.expenseFromUser,
+        fromUsers:
+          this.expenseType == "Custom split"
+            ? this.exepnseCustomusers
+            : this.expenseFromUsers,
+        transType: this.transactionType,
+        expenseType: this.expenseType
+      }
+
+      this.$store.dispatch("transactions/makeTransaction", data).then(() => {
         this.$root.$emit("actionResponse", 1, "success")
+        this.name = null
+        this.amount = null
+        this.incomeToUser = null
+        this.incomeFromUser = null
+        this.expenseFromUser = null
+        this.expenseFromUsers = null
+        this.exepnseCustomusers = []
       })
+      this.$root.$emit("refreshBoard")
     }
   }
 }

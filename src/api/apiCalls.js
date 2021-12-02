@@ -46,7 +46,22 @@ export default {
   //transactions
   makeTransaction(payload) {
     return baseRequest
-      .post("/transactions/makeTransaction", { test: payload })
+      .post("/transactions/makeTransaction", payload)
+      .then(response => response.data)
+  },
+  getBoardTransactions(payload) {
+    return baseRequest
+      .get("/transactions/getBoardTransactions?boardUID=" + payload)
+      .then(response => response.data)
+  },
+  getUserBallance(payload) {
+    return baseRequest
+      .get(
+        "/transactions/getUserBallance?boardUID=" +
+          payload.boardUID +
+          "&userEmail=" +
+          payload.userEmail
+      )
       .then(response => response.data)
   }
 }

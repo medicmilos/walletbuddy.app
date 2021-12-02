@@ -1,75 +1,80 @@
 <template>
   <v-container v-if="getBoard">
-    <p class="text-h5 font-weight-black">Board: {{ getBoard.title }}</p>
-    <p class="text-h6 font-weight-black mb-0">
-      Board Ballance: {{ getBoard.ballance }} RSD
-    </p>
-    <p class="text-h6 font-weight-black">My Ballance: 1 RSD</p>
-    <v-divider />
-    <p class="text-h5 font-weight-black mt-10">INVITE USERS TO BOARD</p>
-    <v-divider />
-    <v-row class="pt-5">
-      <v-text-field
-        class="col-6"
-        label="userIntiveEmail"
-        v-model="userIntiveEmail"
-      />
-      <v-btn @click="inviteUserByEmail">INVITE</v-btn>
-    </v-row>
-    <p class="text-h5 font-weight-black mt-10">MAKE TRANSACTION</p>
-    <v-divider />
-    <v-row class="pt-5">
-      <Expense :boardUsers="boardUsers" />
-    </v-row>
-    <p class="text-h5 font-weight-black mt-10">BOARD TRANSACTIONS</p>
-    <v-divider />
-    <v-row class="pt-5">.......................</v-row>
+    <v-card>
+      <v-toolbar flat color="primary" dark>
+        <v-toolbar-title>
+          <p class="text-h5 font-weight-black">Board: {{ getBoard.title }}</p>
+        </v-toolbar-title>
+      </v-toolbar>
+      <v-tabs background-color="primary accent-4" centered dark icons-and-text>
+        <v-tab>
+          Board
+          <v-icon>mdi-clipboard</v-icon>
+        </v-tab>
+
+        <v-tab>
+          Transactions
+          <v-icon>mdi-cash-multiple</v-icon>
+        </v-tab>
+
+        <v-tab>
+          ME
+          <v-icon>mdi-account-box</v-icon>
+        </v-tab>
+
+        <v-tab-item>
+          <BoardTab :getBoard="getBoard" />
+        </v-tab-item>
+        <v-tab-item>
+          <TransactionsTab />
+        </v-tab-item>
+        <v-tab-item>
+          <PersonalTab />
+        </v-tab-item>
+      </v-tabs>
+    </v-card>
   </v-container>
 </template>
 
 <script>
-import Expense from "../../components/boards/Expense"
+import BoardTab from "../../components/boards/BoardTab"
+import PersonalTab from "../../components/boards/PersonalTab"
+import TransactionsTab from "../../components/boards/TransactionsTab"
 
 export default {
-  components: { Expense },
+  components: { BoardTab, TransactionsTab, PersonalTab },
   name: "Boards",
   props: { id: String },
   computed: {
     getBoard() {
       return this.$store.getters["boards/getBoard"]
+    },
+    getCurrentUser() {
+      return this.$store.getters["auth/getCurrentUser"]
     }
   },
   data() {
     return {
-      users: [],
-      boardUsers: [
-        "milos@deversity.net",
-        "luka@deversity.net",
-        "uros.rakovic@deversity.net",
-        "andrea.filipovic@deversity.net"
-      ],
-      userIntiveEmail: null,
-      staticUser: null
+      loading: false
     }
   },
   created() {
-    this.getBoardData(this.$route.params.uid)
+    this.getBoardData()
+    this.$on("refreshBoard", () => {
+      this.getBoardData()
+    })
   },
   methods: {
-    getBoardData(uid) {
-      this.$store.dispatch("boards/getBoard", uid)
-    },
-    async inviteUserByEmail() {
-      this.$store
-        .dispatch("boards/inviteUserToBoard", {
-          userEmail: this.userIntiveEmail,
-          boardUID: this.getBoard._id
-        })
-        .then(() => {
-          this.$root.$emit("actionResponse", 1, "User invited")
-        })
-    },
-    addStaticUser() {}
+    async getBoardData() {
+      const uid = this.$route.params.uid
+      await this.$store.dispatch("boards/getBoard", uid)
+      await this.$store.dispatch("transactions/getBoardTransactions", uid)
+      await this.$store.dispatch("auth/getCurrentUser")
+      await this.$store.dispatch("transactions/getUserBallance", {
+        boardUID: uid,
+        userEmail: this.getCurrentUser.email
+      })
+    }
   }
 }
 </script>
