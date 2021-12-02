@@ -122,6 +122,7 @@ export default {
         this.loading = false
         if (response.status) {
           this.$router.push({ name: "boards" })
+          this.$store.dispatch("auth/getCurrentUser")
         } else {
           this.$root.$emit("actionResponse", 0, response.data)
         }

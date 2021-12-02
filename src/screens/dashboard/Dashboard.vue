@@ -44,7 +44,7 @@
     </v-navigation-drawer>
 
     <v-main>
-      <v-layout v-if="getCurrentUser" child-flex xs12>
+      <v-layout child-flex xs12>
         <router-view></router-view>
       </v-layout>
       <v-snackbar
@@ -90,7 +90,9 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("auth/getCurrentUser")
+    if (this.isAuthenticated) {
+      this.$store.dispatch("auth/getCurrentUser")
+    }
 
     this.$root.$on("actionResponse", (type, data) => {
       this.snackbarType = type
