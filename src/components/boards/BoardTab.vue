@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <p class="text-h6 font-weight-black mb-0">
-      Ballance: {{ getBoard.ballance }} RSD
+      Board ballance: {{ getBoard.ballance }} RSD
     </p>
     <v-divider />
-    <p class="text-h5 font-weight-black mt-10">INVITE USERS TO BOARD</p>
+    <p class="text-h5 font-weight-black mt-10">INVITE USER TO BOARD</p>
     <v-divider />
     <v-row class="pt-5">
       <v-text-field
@@ -26,34 +26,52 @@
           hide-details
         ></v-text-field>
       </v-card-title>
-      <v-data-table :headers="headers" :items="getBoard.users" :search="search">
-        <template v-slot:[`item.updatedAt`]="{ item }">
-          {{ moment(item.updatedAt).format("DD.MM.YYYY. HH:mm") }}
+      <v-data-table
+        :headers="headers"
+        :items="getUsersOnBoard"
+        :search="search"
+      >
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-btn @click="sendEmailReminder(item)">send reminder</v-btn>
         </template>
       </v-data-table>
     </v-card>
+    <UserReminderModal />
   </v-container>
 </template>
 
 <script>
+import UserReminderModal from "./UserReminderModal.vue"
+
 export default {
+  components: { UserReminderModal },
   name: "BoardTab",
   props: { getBoard: Object },
-  computed: {},
+  computed: {
+    getUsersOnBoard() {
+      return this.$store.getters["boards/getUsersOnBoard"]
+    }
+  },
   data() {
     return {
       loading: false,
       userIntiveEmail: null,
       search: "",
       headers: [
-        { text: "User", value: "item" },
-        { text: "Date and time", value: "updatedAt" }
+        { text: "User", value: "user" },
+        { text: "Ballance", value: "amount" },
+        { text: "Actions", value: "actions" }
       ]
     }
   },
-  created() {},
+  created() {
+    this.getBoardUsers()
+  },
   watch: {},
   methods: {
+    getBoardUsers() {
+      this.$store.dispatch("boards/getUsersOnBoard", this.getBoard._id)
+    },
     async inviteUserByEmail() {
       this.loading = true
       this.$store
@@ -67,6 +85,14 @@ export default {
           this.getBoardData()
           this.$root.$emit("actionResponse", 1, "User invited")
         })
+    },
+    sendEmailReminder(user) {
+      const data = {
+        boardUID: this.getBoard._id,
+        userEmail: user.user,
+        ballance: user.amount
+      }
+      console.log("data: ", data)
     }
   }
 }

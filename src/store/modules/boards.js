@@ -1,7 +1,7 @@
 import api from "../../api/apiCalls"
 
 export default {
-  state: { myBoards: [], sharedBoards: [], board: null },
+  state: { myBoards: [], sharedBoards: [], board: null, usersOnBoard: [] },
   getters: {
     getMyBoards(state) {
       return state.myBoards
@@ -11,6 +11,9 @@ export default {
     },
     getBoard(state) {
       return state.board
+    },
+    getUsersOnBoard(state) {
+      return state.usersOnBoard
     }
   },
   mutations: {
@@ -22,6 +25,9 @@ export default {
     },
     setBoard(state, payload) {
       state.board = payload
+    },
+    setUsersOnBoard(state, payload) {
+      state.usersOnBoard = payload
     }
   },
   actions: {
@@ -76,6 +82,18 @@ export default {
         .createNewBoard(payload)
         .then(response => {
           return { status: true, data: response }
+        })
+        .catch(error => {
+          return { status: false, data: error }
+        })
+    },
+    async getUsersOnBoard({ commit }, payload) {
+      return api
+        .getUsersOnBoard(payload)
+        .then(response => {
+          commit("setUsersOnBoard", response)
+
+          return { status: true, data: response.data }
         })
         .catch(error => {
           return { status: false, data: error }
