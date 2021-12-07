@@ -43,6 +43,16 @@ export default {
       .post("/boards/inviteUserToBoard", payload)
       .then(response => response.data)
   },
+  getUsersOnBoard(payload) {
+    return baseRequest
+      .get(
+        "/boards/getUsersOnBoard?boardUID=" +
+          payload +
+          "&userEmail=" +
+          payload.userEmail
+      )
+      .then(response => response.data)
+  },
   //transactions
   makeTransaction(payload) {
     return baseRequest
