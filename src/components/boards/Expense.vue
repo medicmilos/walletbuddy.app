@@ -10,17 +10,25 @@
     <v-text-field label="Amount" v-model="amount" />
     <div v-if="transactionType == 'Income'">
       <v-select
+        v-model="incomeType"
+        :items="incomeTypeData"
+        label="Income Type"
+        persistent-hint
+      ></v-select>
+      <v-select
         v-model="incomeToUser"
         :items="boardUsers"
         label="TO USER"
         persistent-hint
       ></v-select>
-      <v-select
-        v-model="incomeFromUser"
-        :items="boardUsers"
-        label="FROM USER"
-        persistent-hint
-      ></v-select>
+      <div v-if="incomeType == 'Custom'">
+        <v-select
+          v-model="expenseFromUser"
+          :items="boardUsers"
+          label="FROM USER"
+          persistent-hint
+        ></v-select>
+      </div>
     </div>
     <div v-else-if="transactionType == 'Expense'">
       <v-select
@@ -86,10 +94,11 @@ export default {
       name: null,
       amount: null,
       incomeToUser: null,
-      incomeFromUser: null,
       expenseFromUser: null,
       expenseFromUsers: null,
-      exepnseCustomusers: []
+      exepnseCustomusers: [],
+      incomeType: "Single",
+      incomeTypeData: ["Single", "Custom"]
     }
   },
   created() {},
@@ -121,7 +130,9 @@ export default {
             ? this.exepnseCustomusers
             : this.expenseFromUsers,
         transType: this.transactionType,
-        expenseType: this.expenseType
+        expenseType: this.expenseType,
+        incomeType: this.incomeType,
+        incomeToUser: this.incomeToUser
       }
 
       this.$store.dispatch("transactions/makeTransaction", data).then(() => {
@@ -129,7 +140,6 @@ export default {
         this.name = null
         this.amount = null
         this.incomeToUser = null
-        this.incomeFromUser = null
         this.expenseFromUser = null
         this.expenseFromUsers = null
         this.exepnseCustomusers = []

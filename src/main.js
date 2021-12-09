@@ -18,6 +18,11 @@ Vue.component("ValidationObserver", ValidationObserver)
 Vue.prototype.moment = moment
 Vue.use(Vuetify)
 
+import VueApexCharts from "vue-apexcharts"
+Vue.use(VueApexCharts)
+
+Vue.component("apexchart", VueApexCharts)
+
 new Vue({
   render: h => h(Dashboard),
   store,

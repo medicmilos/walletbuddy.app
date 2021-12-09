@@ -15,6 +15,15 @@
       <v-btn @click="inviteUserByEmail" :disabled="loading">INVITE</v-btn>
     </v-row>
     <v-card>
+      <apexchart
+        :key="chartKey"
+        type="bar"
+        height="400"
+        :options="chartOptions"
+        :series="series"
+      ></apexchart>
+    </v-card>
+    <v-card>
       <v-card-title>
         <b>USERS ON BOARD</b>
         <v-spacer></v-spacer>
@@ -32,19 +41,26 @@
         :search="search"
       >
         <template v-slot:[`item.actions`]="{ item }">
-          <v-btn @click="sendEmailReminder(item)">send reminder</v-btn>
+          <UserReminderModal
+            :data="{
+              boardUID: getBoard._id,
+              userEmail: item.user,
+              ballance: item.amount
+            }"
+          />
         </template>
       </v-data-table>
     </v-card>
-    <UserReminderModal />
   </v-container>
 </template>
 
 <script>
 import UserReminderModal from "./UserReminderModal.vue"
 
+import VueApexCharts from "vue-apexcharts"
+
 export default {
-  components: { UserReminderModal },
+  components: { UserReminderModal, apexchart: VueApexCharts },
   name: "BoardTab",
   props: { getBoard: Object },
   computed: {
@@ -56,12 +72,61 @@ export default {
     return {
       loading: false,
       userIntiveEmail: null,
+      openDialog: false,
+      messageData: null,
       search: "",
       headers: [
         { text: "User", value: "user" },
         { text: "Ballance", value: "amount" },
         { text: "Actions", value: "actions" }
-      ]
+      ],
+      chartKey: 0,
+      series: [
+        {
+          name: "Ballance",
+          data: []
+        }
+      ],
+      chartOptions: {
+        chart: {
+          type: "bar",
+          height: 400
+        },
+        plotOptions: {
+          bar: {
+            colors: {
+              ranges: [
+                {
+                  from: 0,
+                  to: 999999,
+                  color: "#43a047"
+                },
+                {
+                  from: -999999,
+                  to: -1,
+                  color: "#e53935"
+                }
+              ]
+            },
+            columnWidth: "80%"
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        yaxis: {
+          title: {
+            text: "Ballance"
+          }
+        },
+        xaxis: {
+          type: "user",
+          categories: [],
+          labels: {
+            rotate: -90
+          }
+        }
+      }
     }
   },
   created() {
@@ -70,7 +135,16 @@ export default {
   watch: {},
   methods: {
     getBoardUsers() {
-      this.$store.dispatch("boards/getUsersOnBoard", this.getBoard._id)
+      this.$store
+        .dispatch("boards/getUsersOnBoard", this.getBoard._id)
+        .then(() => {
+          console.log("thasdsad: ", this.getUsersOnBoard)
+          this.chartOptions.xaxis.categories = this.getUsersOnBoard.map(
+            obj => obj.user
+          )
+          this.series[0].data = this.getUsersOnBoard.map(obj => obj.amount)
+          this.chartKey++
+        })
     },
     async inviteUserByEmail() {
       this.loading = true
@@ -85,14 +159,6 @@ export default {
           this.getBoardData()
           this.$root.$emit("actionResponse", 1, "User invited")
         })
-    },
-    sendEmailReminder(user) {
-      const data = {
-        boardUID: this.getBoard._id,
-        userEmail: user.user,
-        ballance: user.amount
-      }
-      console.log("data: ", data)
     }
   }
 }
