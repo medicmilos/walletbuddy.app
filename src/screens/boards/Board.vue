@@ -1,38 +1,51 @@
 <template>
-  <v-container v-if="getBoard">
-    <v-card>
-      <v-toolbar flat color="primary" dark>
-        <v-toolbar-title>
-          <p class="text-h5 font-weight-black">Board: {{ getBoard.title }}</p>
-        </v-toolbar-title>
-      </v-toolbar>
-      <v-tabs background-color="primary accent-4" centered dark icons-and-text>
-        <v-tab>
-          Board
-          <v-icon>mdi-clipboard</v-icon>
-        </v-tab>
+  <v-container>
+    <v-row>
+      <v-col cols="12" sm="12">
+        <v-sheet min-height="80vh" rounded="lg" class="pa-0">
+          <v-container class="board-tabs pa-7" v-if="getBoard">
+            <v-toolbar flat color="tabs" dark class="rounded">
+              <v-toolbar-title>
+                <p class="text-h5 font-weight-black boardText--text">
+                  Board: {{ getBoard.title }}
+                </p>
+              </v-toolbar-title>
+            </v-toolbar>
+            <v-tabs
+              background-color="tabs accent-4"
+              centered
+              color="#503396"
+              icons-and-text
+            >
+              <v-tab>
+                Board
+                <v-icon>mdi-clipboard</v-icon>
+              </v-tab>
 
-        <v-tab>
-          Transactions
-          <v-icon>mdi-cash-multiple</v-icon>
-        </v-tab>
+              <v-tab>
+                Transactions
+                <v-icon>mdi-cash-multiple</v-icon>
+              </v-tab>
 
-        <v-tab>
-          ME
-          <v-icon>mdi-account-box</v-icon>
-        </v-tab>
+              <v-tab>
+                ME
+                <v-icon>mdi-account-box</v-icon>
+              </v-tab>
 
-        <v-tab-item>
-          <BoardTab :getBoard="getBoard" />
-        </v-tab-item>
-        <v-tab-item>
-          <TransactionsTab />
-        </v-tab-item>
-        <v-tab-item>
-          <PersonalTab />
-        </v-tab-item>
-      </v-tabs>
-    </v-card>
+              <v-tab-item>
+                <BoardTab :getBoard="getBoard" />
+              </v-tab-item>
+              <v-tab-item>
+                <TransactionsTab />
+              </v-tab-item>
+              <v-tab-item>
+                <PersonalTab />
+              </v-tab-item>
+            </v-tabs>
+          </v-container>
+        </v-sheet>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -79,4 +92,10 @@ export default {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.board-tabs .v-tabs-slider-wrapper {
+  background-color: #6c5fc7 !important;
+  color: #6c5fc7 !important;
+  caret-color: #6c5fc7 !important;
+}
+</style>

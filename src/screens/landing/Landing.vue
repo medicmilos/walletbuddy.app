@@ -1,7 +1,6 @@
 <template>
   <div class="landing-page">
     <div class="content">
-      <!-- <img src="/assets/pattern.png" /> -->
       <h1>WalletBuddy</h1>
       <p>Expenses Management App</p>
       <button @click="goToAuth" class="get-started">Get Started</button>
@@ -35,12 +34,9 @@ body {
 .landing-page {
   height: 100vh;
   position: relative;
-  background: url("/assets/pattern.png") 0px 0px / 300px 300px,
-    linear-gradient(315deg, rgb(24, 13, 28) 0.57%, rgb(69, 38, 80) 100%) 0% 0% /
-      cover;
 
   .content {
-    color: #fff;
+    color: #503396;
     font-family: "Rubik", sans-serif;
 
     position: absolute;
@@ -61,7 +57,7 @@ body {
     .get-started {
       border: none;
       display: inline-block;
-      background-color: #e1567c;
+      background-color: #503396;
       color: hsl(0, 0%, 100%);
       padding: 0.875rem 1.75rem;
       border-radius: 0.1875rem;
@@ -73,7 +69,7 @@ body {
     .get-started:hover {
       opacity: 0.8;
       background-color: transparent;
-      color: #e1567c;
+      color: #503396;
       border-color: currentColor;
     }
   }
