@@ -110,7 +110,11 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if (to.name !== null) {
-      next()
+      if (to.name == "landing") {
+        next({ name: "boards" })
+      } else {
+        next()
+      }
     } else {
       next({ name: "login" })
     }

@@ -177,7 +177,6 @@ export default {
       this.$store
         .dispatch("boards/getUsersOnBoard", this.getBoard._id)
         .then(() => {
-          console.log("thasdsad: ", this.getUsersOnBoard)
           this.chartOptions.xaxis.categories = this.getUsersOnBoard.map(
             obj => obj.user
           )
@@ -200,7 +199,7 @@ export default {
           this.loading = false
           this.userIntiveEmail = null
           this.$refs.observer.reset()
-          this.getBoardData()
+          this.getBoardUsers()
           this.$root.$emit(
             "actionResponse",
             1,
