@@ -98,6 +98,16 @@ export default {
         .catch(error => {
           return { status: false, data: error }
         })
+    },
+    async sendEmailReminder(context, payload) {
+      return api
+        .sendEmailReminder(payload)
+        .then(response => {
+          return { status: true, data: response.data }
+        })
+        .catch(error => {
+          return { status: false, data: error }
+        })
     }
   },
   namespaced: true

@@ -1,69 +1,37 @@
 <template>
-  <v-app>
-    <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant.sync="mini"
-      permanent
-      app
-      v-if="isAuthenticated"
-      class="drawer-color"
-    >
-      <v-list-item class="px-2">
-        <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
-        </v-list-item-avatar>
+  <v-app id="inspire">
+    <v-app-bar app class="app-header" flat v-if="isAuthenticated">
+      <p class="hidden-sm-and-down header-main-logo mb-0">WalletBuddy</p>
 
-        <v-list-item-title v-if="getCurrentUser" class="drawerText--text">
-          {{ getCurrentUser.name }}
-        </v-list-item-title>
+      <v-tabs centered class="ml-n9" color="#503396">
+        <v-tab @click="goToBoards">Boards</v-tab>
+        <v-tab>Analytics</v-tab>
+      </v-tabs>
 
-        <v-btn icon @click.stop="mini = !mini">
-          <v-icon color="drawerIcon">mdi-chevron-left</v-icon>
-        </v-btn>
-      </v-list-item>
-
-      <v-divider></v-divider>
-
-      <v-list dense>
-        <template v-for="item in drawerItems">
-          <DashboardItem :key="item.id" :item="item" />
-        </template>
-
-        <v-list-item link @click="logout">
-          <v-list-item-icon>
-            <v-icon color="drawerIcon">mdi-logout</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title class="drawerText--text">
-              Logout
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-main>
-      <v-layout child-flex xs12>
-        <router-view></router-view>
-      </v-layout>
-      <v-snackbar
-        v-model="snackbar"
-        :color="snackbarType ? 'success' : 'error'"
+      <v-btn
+        class="hidden-sm-and-down"
+        color="#513396"
+        dark
+        outlined
+        @click="logout"
       >
-        {{ snackbarText }}
-        <v-btn dark text @click="snackbar = false">Zatvori</v-btn>
-      </v-snackbar>
+        Logout
+      </v-btn>
+    </v-app-bar>
+
+    <v-main class="grey lighten-3">
+      <router-view></router-view>
     </v-main>
+    <v-snackbar v-model="snackbar" :color="snackbarType ? 'success' : 'error'">
+      {{ snackbarText }}
+      <v-btn dark text @click="snackbar = false">Close</v-btn>
+    </v-snackbar>
   </v-app>
 </template>
 
 <script>
-import DashboardItem from "../../components/dashboard/DashboardItem.vue"
-
 export default {
   name: "Dashboard",
-  components: { DashboardItem },
   data() {
     return {
       drawer: true,
@@ -105,24 +73,40 @@ export default {
       this.$store.dispatch("auth/logout").then(() => {
         this.$router.push({ name: "login" })
       })
+    },
+    goToBoards() {
+      this.$router.push({ name: "boards" })
     }
   }
 }
 </script>
 
 <style lang="scss">
+.header-main-logo {
+  color: #503396;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.v-main__wrap {
+  background: rgb(234, 226, 247);
+  background: linear-gradient(
+    45deg,
+    rgba(234, 226, 247, 1) 0%,
+    rgba(210, 224, 249, 1) 100%
+  );
+}
+.app-header {
+  background: rgb(252, 249, 252);
+  background: linear-gradient(
+    45deg,
+    rgba(252, 249, 252, 1) 0%,
+    rgba(248, 249, 253, 1) 100%
+  );
+}
 body {
   font-family: Rubik, Avenir Next, Helvetica Neue, sans-serif;
   .v-application {
     font-family: Rubik, Avenir Next, Helvetica Neue, sans-serif;
   }
-}
-.drawer-color {
-  background: linear-gradient(
-    294.17deg,
-    rgb(47, 25, 55) 35.57%,
-    rgb(69, 38, 80) 92.42%,
-    rgb(69, 38, 80) 92.42%
-  );
 }
 </style>

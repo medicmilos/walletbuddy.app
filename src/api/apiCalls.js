@@ -53,6 +53,11 @@ export default {
       )
       .then(response => response.data)
   },
+  sendEmailReminder(payload) {
+    return baseRequest
+      .post("/boards/sendEmailReminder", payload)
+      .then(response => response.data)
+  },
   //transactions
   makeTransaction(payload) {
     return baseRequest

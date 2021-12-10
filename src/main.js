@@ -18,6 +18,11 @@ Vue.component("ValidationObserver", ValidationObserver)
 Vue.prototype.moment = moment
 Vue.use(Vuetify)
 
+import VueApexCharts from "vue-apexcharts"
+Vue.use(VueApexCharts)
+
+Vue.component("apexchart", VueApexCharts)
+
 new Vue({
   render: h => h(Dashboard),
   store,
@@ -26,14 +31,17 @@ new Vue({
     theme: {
       themes: {
         light: {
-          auth: "#452650",
-          primary: "#2e0d34",
-          pinkButton: "#e1567c",
+          auth: "#503396",
+          primary: "#503396",
+          pinkButton: "#503396",
           purpleButton: "#6d5ec7",
           drawerIcon: "#8f82a0",
           drawerIconActive: "#ffffff",
           drawerText: "#8f82a0",
-          drawerTextActive: "#ffffff"
+          drawerTextActive: "#ffffff",
+          tabs: "#faf9fb",
+          tabsText: "#503396",
+          boardText: "#121f3e"
         }
       }
     }

@@ -50,6 +50,9 @@
               </span>
             </slot>
           </template>
+          <template v-slot:[`item.incomeToUser`]="{ item }">
+            {{ item.incomeToUser ? item.incomeToUser : "BOARD" }}
+          </template>
         </v-data-table>
       </v-card>
     </v-row>
@@ -79,7 +82,8 @@ export default {
         { text: "Expense type", value: "expenseType" },
         { text: "Name", value: "name" },
         { text: "Amount", value: "amount" },
-        { text: "From users", value: "fromUsers" },
+        { text: "From", value: "fromUsers" },
+        { text: "To", value: "incomeToUser" },
         { text: "Date and time", value: "updatedAt" },
         { text: "Details", value: "detaiils" }
       ]

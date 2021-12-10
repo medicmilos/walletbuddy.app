@@ -1,29 +1,70 @@
 <template>
   <v-container>
-    <p class="text-h6 font-weight-black mb-0">
-      Board ballance: {{ getBoard.ballance }} RSD
+    <p class="font-weight-bold mb-0 board-ballance">
+      Board total ballance:
+
+      <span>{{ eRs(getBoard.ballance) }}</span>
+      &nbsp;
+      <span>RSD</span>
     </p>
-    <v-divider />
-    <p class="text-h5 font-weight-black mt-10">INVITE USER TO BOARD</p>
-    <v-divider />
-    <v-row class="pt-5">
-      <v-text-field
-        class="col-6"
-        label="userIntiveEmail"
-        v-model="userIntiveEmail"
-      />
-      <v-btn @click="inviteUserByEmail" :disabled="loading">INVITE</v-btn>
-    </v-row>
+    <v-divider class="mb-5 mt-5" />
+    <validation-observer ref="observer" v-slot="{ invalid }">
+      <div class="d-flex pt-5">
+        <p class="mb-0 mt-2 mr-2 font-weight-bold">Add user to board:</p>
+        <validation-provider
+          v-slot="{ errors }"
+          name="userIntiveEmail"
+          rules="required|email"
+        >
+          <v-text-field
+            @keydown.enter.native="inviteUserByEmail"
+            :error-messages="errors"
+            label="E-mail"
+            prepend-inner-icon="mdi-email"
+            outlined
+            dense
+            flat
+            v-model="userIntiveEmail"
+            class="input-text"
+          ></v-text-field>
+        </validation-provider>
+        <v-btn
+          class="ml-2 mt-1 font-weight-bold custom-button"
+          @click="inviteUserByEmail"
+          :disabled="invalid || loading"
+          color="#513396"
+          dark
+          small
+        >
+          ADD
+        </v-btn>
+      </div>
+    </validation-observer>
+    <v-divider class="mb-5 mt-5" />
+    <v-card>
+      <apexchart
+        :key="chartKey"
+        type="bar"
+        height="300"
+        :options="chartOptions"
+        :series="series"
+        title="sadasd"
+      ></apexchart>
+    </v-card>
+    <v-divider class="mb-5 mt-5" />
     <v-card>
       <v-card-title>
-        <b>USERS ON BOARD</b>
+        <p class="users-table-title">Users on board</p>
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
           label="Search"
-          single-line
           hide-details
+          outlined
+          dense
+          flat
+          class="input-text col-4"
         ></v-text-field>
       </v-card-title>
       <v-data-table
@@ -32,19 +73,26 @@
         :search="search"
       >
         <template v-slot:[`item.actions`]="{ item }">
-          <v-btn @click="sendEmailReminder(item)">send reminder</v-btn>
+          <UserReminderModal
+            :data="{
+              boardUID: getBoard._id,
+              userEmail: item.user,
+              ballance: item.amount
+            }"
+          />
         </template>
       </v-data-table>
     </v-card>
-    <UserReminderModal />
   </v-container>
 </template>
 
 <script>
 import UserReminderModal from "./UserReminderModal.vue"
 
+import VueApexCharts from "vue-apexcharts"
+
 export default {
-  components: { UserReminderModal },
+  components: { UserReminderModal, apexchart: VueApexCharts },
   name: "BoardTab",
   props: { getBoard: Object },
   computed: {
@@ -56,12 +104,68 @@ export default {
     return {
       loading: false,
       userIntiveEmail: null,
+      openDialog: false,
+      messageData: null,
       search: "",
       headers: [
         { text: "User", value: "user" },
         { text: "Ballance", value: "amount" },
         { text: "Actions", value: "actions" }
-      ]
+      ],
+      chartKey: 0,
+      series: [
+        {
+          name: "Ballance",
+          data: []
+        }
+      ],
+      chartOptions: {
+        title: {
+          text: "Ballance by user",
+          style: {
+            fontSize: "16px",
+            fontWeight: "bold"
+          }
+        },
+        chart: {
+          type: "bar",
+          height: 300
+        },
+        plotOptions: {
+          bar: {
+            colors: {
+              ranges: [
+                {
+                  from: 0,
+                  to: 999999,
+                  color: "#43a047"
+                },
+                {
+                  from: -999999,
+                  to: -1,
+                  color: "#e53935"
+                }
+              ]
+            },
+            columnWidth: "80%"
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        yaxis: {
+          title: {
+            text: "Ballance"
+          }
+        },
+        xaxis: {
+          type: "user",
+          categories: [],
+          labels: {
+            rotate: -90
+          }
+        }
+      }
     }
   },
   created() {
@@ -70,9 +174,22 @@ export default {
   watch: {},
   methods: {
     getBoardUsers() {
-      this.$store.dispatch("boards/getUsersOnBoard", this.getBoard._id)
+      this.$store
+        .dispatch("boards/getUsersOnBoard", this.getBoard._id)
+        .then(() => {
+          console.log("thasdsad: ", this.getUsersOnBoard)
+          this.chartOptions.xaxis.categories = this.getUsersOnBoard.map(
+            obj => obj.user
+          )
+          this.series[0].data = this.getUsersOnBoard.map(obj => obj.amount)
+          this.chartKey++
+        })
     },
-    async inviteUserByEmail() {
+    inviteUserByEmail() {
+      this.$refs.observer.validate()
+
+      this.userIntiveEmail = null
+
       this.loading = true
       this.$store
         .dispatch("boards/inviteUserToBoard", {
@@ -82,20 +199,59 @@ export default {
         .then(() => {
           this.loading = false
           this.userIntiveEmail = null
+          this.$refs.observer.reset()
           this.getBoardData()
-          this.$root.$emit("actionResponse", 1, "User invited")
+          this.$root.$emit(
+            "actionResponse",
+            1,
+            "User successfully added to board."
+          )
         })
     },
-    sendEmailReminder(user) {
-      const data = {
-        boardUID: this.getBoard._id,
-        userEmail: user.user,
-        ballance: user.amount
-      }
-      console.log("data: ", data)
+    eRs(x) {
+      let numb = Math.round(x * 100) / 100
+      let local = numb.toLocaleString("sr-RS", {
+        minimumFractionDigits: 2
+      })
+
+      return local
     }
   }
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.v-btn.v-btn--disabled.ml-2.font-weight-bold.custom-button {
+  background-color: #503396 !important;
+  color: #fff !important;
+  opacity: 0.7;
+}
+
+.users-table-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+.board-ballance {
+  font-size: 1.25rem;
+  span:nth-child(2) {
+    color: #503396;
+    font-size: 1rem;
+  }
+  span:nth-child(1) {
+    color: #503396;
+    font-size: 2rem;
+  }
+}
+
+.input-text {
+  fieldset {
+    border: 2px solid #9280be !important;
+  }
+  label {
+    color: #9280be !important;
+  }
+  i {
+    color: #9280be !important;
+  }
+}
+</style>

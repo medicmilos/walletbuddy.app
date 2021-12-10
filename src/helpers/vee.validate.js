@@ -3,15 +3,15 @@ import { email, numeric, required } from "vee-validate/dist/rules"
 
 extend("required", {
   ...required,
-  message: "Polje je obavezno."
+  message: "Field is mandatory"
 })
 
 extend("email", {
   ...email,
-  message: "Email mora biti u validnom formatu."
+  message: "E-mail must be valid format"
 })
 
 extend("numeric", {
   ...numeric,
-  message: "Polje mora biti broj."
+  message: "Field must be number"
 })
