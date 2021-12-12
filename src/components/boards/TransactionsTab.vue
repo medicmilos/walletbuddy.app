@@ -9,20 +9,24 @@
     <v-row class="pt-5">
       <v-card>
         <v-card-title>
-          <b>TRANSACTIONS HISTORY</b>
+          <p class="users-table-title">Board transactions history</p>
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
             label="Search"
-            single-line
             hide-details
+            outlined
+            dense
+            flat
+            class="input-text col-4"
           ></v-text-field>
         </v-card-title>
         <v-data-table
           :headers="headers"
           :items="getBoardTransactions"
           :search="search"
+          :key="tableKey + 'tbl'"
         >
           <template v-slot:[`item.transType`]="{ item }">
             <v-chip v-if="item.transType == 'Expense'" color="red" dark>
@@ -51,7 +55,13 @@
             </slot>
           </template>
           <template v-slot:[`item.incomeToUser`]="{ item }">
-            {{ item.incomeToUser ? item.incomeToUser : "BOARD" }}
+            {{ item.incomeToUser ? item.incomeToUser : "" }}
+          </template>
+
+          <template v-slot:[`item.expenseType`]="{ item }">
+            {{
+              item.transType == "Income" ? item.incomeType : item.expenseType
+            }}
           </template>
         </v-data-table>
       </v-card>
@@ -74,12 +84,18 @@ export default {
       return this.$store.getters["transactions/getBoardTransactions"]
     }
   },
+  watch: {
+    getBoardTransactions(newVal) {
+      console.log(newVal)
+    }
+  },
   data() {
     return {
       search: "",
+      tableKey: 0,
       headers: [
-        { text: "Trans. type", value: "transType" },
-        { text: "Expense type", value: "expenseType" },
+        { text: "Transaction", value: "transType" },
+        { text: "Trans. type", value: "expenseType" },
         { text: "Name", value: "name" },
         { text: "Amount", value: "amount" },
         { text: "From", value: "fromUsers" },
@@ -89,8 +105,11 @@ export default {
       ]
     }
   },
-  created() {},
-  watch: {},
+  created() {
+    this.$root.$on("refreshTransTab", () => {
+      this.tableKey++
+    })
+  }, 
   methods: {}
 }
 </script>

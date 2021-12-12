@@ -26,12 +26,14 @@
             flat
             v-model="userIntiveEmail"
             class="input-text"
+            @blur="$refs.observer.reset()"
           ></v-text-field>
         </validation-provider>
         <v-btn
           class="ml-2 mt-1 font-weight-bold custom-button"
           @click="inviteUserByEmail"
-          :disabled="invalid || loading"
+          :disabled="invalid"
+          :loading="loading"
           color="#513396"
           dark
           small
@@ -170,6 +172,10 @@ export default {
   },
   created() {
     this.getBoardUsers()
+
+    this.$root.$on("refreshBoardTab", () => {
+      this.getBoardUsers()
+    })
   },
   watch: {},
   methods: {
@@ -177,7 +183,6 @@ export default {
       this.$store
         .dispatch("boards/getUsersOnBoard", this.getBoard._id)
         .then(() => {
-          console.log("thasdsad: ", this.getUsersOnBoard)
           this.chartOptions.xaxis.categories = this.getUsersOnBoard.map(
             obj => obj.user
           )
@@ -187,8 +192,6 @@ export default {
     },
     inviteUserByEmail() {
       this.$refs.observer.validate()
-
-      this.userIntiveEmail = null
 
       this.loading = true
       this.$store
@@ -200,7 +203,7 @@ export default {
           this.loading = false
           this.userIntiveEmail = null
           this.$refs.observer.reset()
-          this.getBoardData()
+          this.getBoardUsers()
           this.$root.$emit(
             "actionResponse",
             1,

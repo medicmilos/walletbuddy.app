@@ -18,7 +18,9 @@ export default {
   data() {
     return {}
   },
-  created() {},
+  created() {
+    this.$root.$on("refreshPersonalTab", () => {})
+  },
   watch: {},
   methods: {}
 }

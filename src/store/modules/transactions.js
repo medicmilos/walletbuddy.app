@@ -18,6 +18,7 @@ export default {
       state.myBoards = payload
     },
     setBoardTransactions(state, payload) {
+      console.log("----: ", payload)
       state.boardTransactions = payload
     },
     setUserBallance(state, payload) {
