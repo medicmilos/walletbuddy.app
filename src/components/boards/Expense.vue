@@ -1,5 +1,7 @@
 <template>
   <div class="col-6">
+    <p class="mb-0">Transaction Type</p>
+    <v-row>asdsad</v-row>
     <v-select
       v-model="transactionType"
       :items="transactionTypeData"

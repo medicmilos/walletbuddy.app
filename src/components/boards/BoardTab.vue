@@ -26,12 +26,14 @@
             flat
             v-model="userIntiveEmail"
             class="input-text"
+            @blur="$refs.observer.reset()"
           ></v-text-field>
         </validation-provider>
         <v-btn
           class="ml-2 mt-1 font-weight-bold custom-button"
           @click="inviteUserByEmail"
-          :disabled="invalid || loading"
+          :disabled="invalid"
+          :loading="loading"
           color="#513396"
           dark
           small
@@ -186,8 +188,6 @@ export default {
     },
     inviteUserByEmail() {
       this.$refs.observer.validate()
-
-      this.userIntiveEmail = null
 
       this.loading = true
       this.$store

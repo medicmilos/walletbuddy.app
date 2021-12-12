@@ -3,7 +3,7 @@ import { email, numeric, required } from "vee-validate/dist/rules"
 
 extend("required", {
   ...required,
-  message: "Field is mandatory"
+  message: "Field is required"
 })
 
 extend("email", {

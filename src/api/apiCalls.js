@@ -45,12 +45,7 @@ export default {
   },
   getUsersOnBoard(payload) {
     return baseRequest
-      .get(
-        "/boards/getUsersOnBoard?boardUID=" +
-          payload +
-          "&userEmail=" +
-          payload.userEmail
-      )
+      .get("/boards/getUsersOnBoard?boardUID=" + payload)
       .then(response => response.data)
   },
   sendEmailReminder(payload) {

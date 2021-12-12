@@ -24,7 +24,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="red darken-1"
+          color="gray darken-1"
           text
           @click="dialog = false"
           :disabled="loading"
@@ -36,6 +36,7 @@
           text
           @click="sendEmail"
           :disabled="loading"
+          :loading="loading"
         >
           Send
         </v-btn>
