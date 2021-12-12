@@ -16,6 +16,7 @@
               centered
               color="#503396"
               icons-and-text
+              @change="refreshTabs"
             >
               <v-tab>
                 Board
@@ -68,13 +69,16 @@ export default {
   },
   data() {
     return {
-      loading: false
+      loading: false,
+      boardTabKey: 0,
+      transTabKey: 0,
+      personalTabKey: 1
     }
   },
   created() {
-    this.getBoardData()
-    this.$on("refreshBoard", () => {
-      this.getBoardData()
+    this.refreshTabs()
+    this.$root.$on("refreshBoard", () => {
+      this.refreshTabs()
     })
   },
   methods: {
@@ -87,6 +91,12 @@ export default {
         boardUID: uid,
         userEmail: this.getCurrentUser.email
       })
+    },
+    async refreshTabs() {
+      this.getBoardData()
+      this.$root.$emit("refreshBoardTab")
+      this.$root.$emit("refreshTransTab")
+      this.$root.$emit("refreshPersonalTab")
     }
   }
 }

@@ -172,6 +172,10 @@ export default {
   },
   created() {
     this.getBoardUsers()
+
+    this.$root.$on("refreshBoardTab", () => {
+      this.getBoardUsers()
+    })
   },
   watch: {},
   methods: {
