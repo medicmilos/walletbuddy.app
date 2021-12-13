@@ -70,7 +70,6 @@ export default {
         this.dialog = false
         this.$root.$emit("actionResponse", 1, "Message sent")
       })
-      console.log(data)
     }
   }
 }

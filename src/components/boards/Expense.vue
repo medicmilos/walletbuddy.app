@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12">
+  <div class="col-12 expense-page">
     <div class="container">
       <div class="plans">
         <div class="title-pan">Transaction Type</div>
@@ -15,9 +15,7 @@
           <div class="plan-content">
             <div class="plan-details">
               <span>Expense</span>
-              <p class="mb-0">
-                For smaller business, with simple salaries and pay schedules.
-              </p>
+              <p class="mb-0">Make new expense.</p>
             </div>
           </div>
         </label>
@@ -33,10 +31,7 @@
           <div class="plan-content">
             <div class="plan-details">
               <span>Income</span>
-              <p class="mb-0">
-                For growing business who wants to create a rewarding place to
-                work.
-              </p>
+              <p class="mb-0">Add new income.</p>
             </div>
           </div>
         </label>
@@ -48,6 +43,95 @@
       label="Transaction Type"
       persistent-hint
     ></v-select> -->
+
+    <div v-if="transactionType == 'Expense'" class="container">
+      <div class="plans three-plans">
+        <div class="title-pan">Expense Type</div>
+        <label class="plan complete-plan" for="Single">
+          <input
+            type="radio"
+            id="Single"
+            v-model="expenseType"
+            name="expenseType"
+            value="Single"
+          />
+
+          <div class="plan-content">
+            <div class="plan-details">
+              <span>Single</span>
+              <p class="mb-0">Single user expense.</p>
+            </div>
+          </div>
+        </label>
+        <label class="plan complete-plan" for="Split all">
+          <input
+            type="radio"
+            id="Split all"
+            v-model="expenseType"
+            name="expenseType"
+            value="Split all"
+          />
+          <div class="plan-content">
+            <div class="plan-details">
+              <span>Split all</span>
+              <p class="mb-0">Equally split between users</p>
+            </div>
+          </div>
+        </label>
+        <label class="plan complete-plan" for="Custom split">
+          <input
+            type="radio"
+            id="Custom split"
+            v-model="expenseType"
+            name="expenseType"
+            value="Custom split"
+          />
+          <div class="plan-content">
+            <div class="plan-details">
+              <span>Custom split</span>
+              <p class="mb-0">Custom split between users</p>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div v-if="transactionType == 'Income'" class="container">
+      <div class="plans">
+        <div class="title-pan">Income Type</div>
+        <label class="plan complete-plan" for="Single">
+          <input
+            type="radio"
+            id="Single"
+            v-model="incomeType"
+            name="incomeType"
+            value="Single"
+          />
+
+          <div class="plan-content">
+            <div class="plan-details">
+              <span>Single</span>
+              <p class="mb-0">Add money to single user's ballance.</p>
+            </div>
+          </div>
+        </label>
+        <label class="plan complete-plan" for="Custom">
+          <input
+            type="radio"
+            id="Custom"
+            v-model="incomeType"
+            name="incomeType"
+            value="Custom"
+          />
+          <div class="plan-content">
+            <div class="plan-details">
+              <span>Custom</span>
+              <p class="mb-0">Add money from one user to another.</p>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
     <div class="mt-2 mb-2 pl-3 pr-3 d-flex justify-space-between">
       <v-text-field
         class="mr-3 input-text"
@@ -68,137 +152,45 @@
         flat
       ></v-text-field>
     </div>
-    <div v-if="transactionType == 'Income'">
-      <div class="container">
-        <div class="plans">
-          <div class="title-pan">Income Type</div>
-          <label class="plan complete-plan" for="Single">
-            <input
-              type="radio"
-              id="Single"
-              v-model="incomeType"
-              name="incomeType"
-              value="Single"
-            />
-
-            <div class="plan-content">
-              <div class="plan-details">
-                <span>Single</span>
-                <p class="mb-0">
-                  For growing business who wants to create a rewarding place to
-                  work.
-                </p>
-              </div>
-            </div>
-          </label>
-          <label class="plan complete-plan" for="Custom">
-            <input
-              type="radio"
-              id="Custom"
-              v-model="incomeType"
-              name="incomeType"
-              value="Custom"
-            />
-            <div class="plan-content">
-              <div class="plan-details">
-                <span>Custom</span>
-                <p class="mb-0">
-                  For growing business who wants to create a rewarding place to
-                  work.
-                </p>
-              </div>
-            </div>
-          </label>
-        </div>
-      </div>
-      <!-- <v-select
-        v-model="incomeType"
-        :items="incomeTypeData"
-        label="Income Type"
-        persistent-hint
-      ></v-select>
-       -->
+    <div v-if="transactionType == 'Income'" class="d-flex mt-5">
       <v-select
         v-model="incomeToUser"
         :items="boardUsers"
         label="TO USER"
         persistent-hint
+        class="input-text col-6 pr-6 col-xs-12 ml-3"
+        hide-details
+        outlined
+        dense
+        flat
       ></v-select>
-      <div v-if="incomeType == 'Custom'">
-        <v-select
-          v-model="expenseFromUser"
-          :items="boardUsers"
-          label="FROM USER"
-          persistent-hint
-        ></v-select>
-      </div>
-    </div>
-    <div v-else-if="transactionType == 'Expense'">
-      <div class="container">
-        <div class="plans three-plans">
-          <div class="title-pan">Expense Type</div>
-          <label class="plan complete-plan" for="Single">
-            <input
-              type="radio"
-              id="Single"
-              v-model="expenseType"
-              name="expenseType"
-              value="Single"
-            />
 
-            <div class="plan-content">
-              <div class="plan-details">
-                <span>Single</span>
-                <p class="mb-0">
-                  For growing business who wants to create a rewarding place to
-                  work.
-                </p>
-              </div>
-            </div>
-          </label>
-          <label class="plan complete-plan" for="Split all">
-            <input
-              type="radio"
-              id="Split all"
-              v-model="expenseType"
-              name="expenseType"
-              value="Split all"
-            />
-            <div class="plan-content">
-              <div class="plan-details">
-                <span>Split all</span>
-                <p class="mb-0">
-                  Equally split between users
-                </p>
-              </div>
-            </div>
-          </label>
-          <label class="plan complete-plan" for="Custom split">
-            <input
-              type="radio"
-              id="Custom split"
-              v-model="expenseType"
-              name="expenseType"
-              value="Custom split"
-            />
-            <div class="plan-content">
-              <div class="plan-details">
-                <span>Custom split</span>
-                <p class="mb-0">
-                  For growing business who wants to create a rewarding place to
-                  work.
-                </p>
-              </div>
-            </div>
-          </label>
-        </div>
-      </div>
+      <v-select
+        v-if="incomeType == 'Custom'"
+        v-model="expenseFromUser"
+        :items="boardUsers"
+        label="FROM USER"
+        persistent-hint
+        class="input-text col-6 pr-6 col-xs-12"
+        hide-details
+        outlined
+        dense
+        flat
+      ></v-select>
+    </div>
+
+    <div v-else-if="transactionType == 'Expense'">
       <div v-if="expenseType == 'Single'">
         <v-select
           v-model="expenseFromUser"
           :items="boardUsers"
           label="FROM USER"
           persistent-hint
+          class="input-text col-6 pr-6 col-xs-12 ml-3 mt-5"
+          hide-details
+          outlined
+          dense
+          flat
         ></v-select>
       </div>
       <div v-else-if="expenseType == 'Split all'">
@@ -209,6 +201,11 @@
           multiple
           chips
           persistent-hint
+          class="input-text col-6 pr-6 col-xs-12 ml-3 mt-5"
+          hide-details
+          outlined
+          dense
+          flat
         ></v-select>
       </div>
       <div v-else-if="expenseType == 'Custom split'">
@@ -218,21 +215,56 @@
           :key="'custom-user-' + index"
         >
           <v-select
-            class="col-6"
             v-model="user.user"
             :items="boardUsers"
             label="FROM USER"
             persistent-hint
+            class="input-text col-6 col-xs-12 ml-3 pr-6 mt-3"
+            hide-details
+            outlined
+            dense
+            flat
           ></v-select>
-          <v-text-field class="col-4" label="Amount" v-model="user.amount" />
-          <v-btn class="col-2" @click="removeCustomUser(index)">RMV USR</v-btn>
+          <v-text-field
+            class="col-4 input-text pr-5 mt-3"
+            label="Custom amount"
+            v-model="user.amount"
+            hide-details
+            outlined
+            dense
+            flat
+          />
+          <v-btn
+            style="width: 14%"
+            class="mt-4"
+            @click="removeCustomUser(index)"
+            color="#513396"
+            dark
+            small
+          >
+            remove user
+          </v-btn>
         </div>
-        <v-btn @click="addCustomUser">ADD USER</v-btn>
+        <v-btn
+          @click="addCustomUser"
+          class="custom-button ml-3 mt-3"
+          color="#513396"
+          dark
+          small
+        >
+          ADD USER
+        </v-btn>
       </div>
     </div>
-    <br />
-    <br />
-    <v-btn @click="makeTransaction">MAKE TRANSACTION</v-btn>
+    <v-btn
+      @click="makeTransaction"
+      class="font-weight-bold ml-3 mt-5"
+      color="#513396"
+      dark
+      medium
+    >
+      MAKE TRANSACTION
+    </v-btn>
   </div>
 </template>
 
@@ -251,7 +283,12 @@ export default {
       incomeToUser: null,
       expenseFromUser: null,
       expenseFromUsers: null,
-      exepnseCustomusers: [],
+      exepnseCustomusers: [
+        {
+          user: null,
+          amount: null
+        }
+      ],
       incomeType: "Single",
       incomeTypeData: ["Single", "Custom"]
     }
@@ -261,7 +298,12 @@ export default {
     expenseType() {
       this.expenseFromUser = null
       this.expenseFromUsers = null
-      this.exepnseCustomusers = []
+      this.exepnseCustomusers = [
+        {
+          user: null,
+          amount: null
+        }
+      ]
     }
   },
   methods: {
@@ -294,7 +336,11 @@ export default {
         this.$root.$emit("refreshBoard")
         this.$root.$emit("refreshTransTab")
 
-        this.$root.$emit("actionResponse", 1, "success")
+        this.$root.$emit(
+          "actionResponse",
+          1,
+          "Successfully executed new transaction"
+        )
         this.name = null
         this.amount = null
         this.incomeToUser = null
@@ -308,6 +354,11 @@ export default {
 </script>
 
 <style lang="scss">
+.expense-page {
+  .theme--light.v-chip:not(.v-chip--active) {
+    margin: 5px;
+  }
+}
 .plans {
   display: flex;
   justify-content: space-between;

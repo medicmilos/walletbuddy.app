@@ -6,7 +6,10 @@
           <v-container class="board-tabs pa-7" v-if="getBoard">
             <v-toolbar flat color="tabs" dark class="rounded">
               <v-toolbar-title>
-                <p class="text-h5 font-weight-black boardText--text">
+                <p
+                  style="font-size: 26px"
+                  class="font-weight-black boardText--text"
+                >
                   Board: {{ getBoard.title }}
                 </p>
               </v-toolbar-title>

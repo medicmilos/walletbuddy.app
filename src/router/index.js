@@ -109,7 +109,6 @@ router.beforeEach((to, from, next) => {
       next({ name: "login" })
     }
   } else {
-    console.log(123, to.name)
     if (to.name !== null) {
       if (to.name == "landing") {
         if (access) {

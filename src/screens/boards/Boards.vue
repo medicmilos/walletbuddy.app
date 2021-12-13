@@ -121,15 +121,10 @@ export default {
         ballance: 0,
         users: [this.getCurrentUser.email]
       }
-      this.$store.dispatch("boards/createNewBoard", data).then(response => {
+      this.$store.dispatch("boards/createNewBoard", data).then(() => {
         this.getMyBoardsData()
         this.boardTitle = ""
         this.loading = false
-        if (response.status) {
-          //console.log("response success app: ", response.data)
-        } else {
-          //console.log("response error app: ", response.data)
-        }
       })
     },
     getMyBoardsData() {
