@@ -39,9 +39,11 @@
               {{ item.transType }}
             </v-chip>
           </template>
-
+          <template v-slot:[`item.amount`]="{ item }">
+            {{ item.amount }} {{ getBoard.boardCurrency }}
+          </template>
           <template v-slot:[`item.updatedAt`]="{ item }">
-            {{ moment(item.updatedAt).format("DD.MM.YYYY. HH:mm") }}
+            {{ moment(item.updatedAt).format("DD.MM.YYYY.") }}
           </template>
 
           <template v-slot:[`item.fromUsers`]="{ item }">
@@ -94,11 +96,11 @@ export default {
       headers: [
         { text: "Transaction", value: "transType" },
         { text: "Trans. type", value: "expenseType" },
-        { text: "Name", value: "name" },
-        { text: "Amount", value: "amount" },
+        { text: "Name", value: "name", width: "20%" },
+        { text: "Amount", value: "amount", width: "15%" },
         { text: "From", value: "fromUsers" },
         { text: "To", value: "incomeToUser" },
-        { text: "Date and time", value: "updatedAt" },
+        { text: "Date", value: "updatedAt" },
         { text: "Details", value: "detaiils" }
       ]
     }

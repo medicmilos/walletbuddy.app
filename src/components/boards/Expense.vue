@@ -143,6 +143,7 @@
         outlined
         dense
         flat
+        :suffix="getBoard.boardCurrency"
       ></v-text-field>
     </div>
     <div v-if="transactionType == 'Income'" class="d-flex mt-5">
@@ -226,6 +227,7 @@
             outlined
             dense
             flat
+            :suffix="getBoard.boardCurrency"
           />
           <v-btn
             style="width: 14%"
@@ -265,7 +267,11 @@
 export default {
   name: "Expense",
   props: { board: Object, boardUsers: Array },
-  computed: {},
+  computed: {
+    getBoard() {
+      return this.$store.getters["boards/getBoard"]
+    }
+  },
   data() {
     return {
       transactionType: "Expense",

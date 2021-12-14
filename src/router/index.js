@@ -2,6 +2,7 @@ import store from "../store"
 import Vue from "vue"
 import VueRouter from "vue-router"
 
+import Analytics from "../screens/analytics/Analytics"
 import Board from "../screens/boards/Board"
 import Boards from "../screens/boards/Boards"
 import ForgotPassword from "../screens/auth/ForgotPassword"
@@ -61,6 +62,15 @@ const routes = [
     component: Board,
     meta: {
       title: "Board",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/app/analytics",
+    name: "analytics",
+    component: Analytics,
+    meta: {
+      title: "Analytics",
       requiresAuth: true
     }
   },

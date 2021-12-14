@@ -19,7 +19,13 @@
         To user: {{ data.userEmail }}
       </v-card-subtitle>
       <v-card-text>
-        <v-textarea v-model="message"></v-textarea>
+        <v-textarea
+          v-model="message"
+          outlined
+          dense
+          flat
+          class="input-text"
+        ></v-textarea>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -32,11 +38,12 @@
           Close
         </v-btn>
         <v-btn
-          color="green darken-1"
-          text
           @click="sendEmail"
           :disabled="loading"
           :loading="loading"
+          color="#513396"
+          dark
+          small
         >
           Send
         </v-btn>

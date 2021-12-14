@@ -5,7 +5,7 @@
 
       <v-tabs centered class="ml-n9" color="#503396">
         <v-tab @click="goToBoards">Boards</v-tab>
-        <v-tab>Analytics</v-tab>
+        <v-tab @click="goToAnalytics">Analytics</v-tab>
       </v-tabs>
 
       <v-btn
@@ -76,6 +76,9 @@ export default {
     },
     goToBoards() {
       this.$router.push({ name: "boards" })
+    },
+    goToAnalytics() {
+      this.$router.push({ name: "analytics" })
     }
   }
 }
