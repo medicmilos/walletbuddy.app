@@ -3,27 +3,50 @@
     <v-row>
       <v-col cols="12" sm="12">
         <v-sheet min-height="80vh" rounded="lg" class="pa-0">
-          <v-container class="boards-page pa-10">
-            <p class="text-h6 font-weight-black mt-1 mb-1">Boards</p>
-            <v-divider />
-            <p class="text-h6 font-weight-black mt-5" v-if="getCurrentUser">
-              User: {{ getCurrentUser.email }}
+          <v-container class="boards-page pa-7">
+            <p style="font-size: 24px" class="font-weight-black mt-1 mb-1">
+              Welcome back {{ getCurrentUser.email }}
             </p>
-            <p class="text-h5 font-weight-black mt-10">Create new board</p>
-            <v-divider />
-            <v-row class="pt-5 d-flex align-center">
-              <v-text-field
-                class="col-4"
-                @keydown.enter.native="createBoard"
-                v-model="boardTitle"
-                label="Board title"
-              />
-              <v-btn @click="createBoard" :disabled="loading" color="primary">
-                create
-              </v-btn>
-            </v-row>
-            <p class="text-h5 font-weight-black mt-5">My boards</p>
-            <v-divider />
+            <v-divider class="mt-5 mb-5" />
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <div class="d-flex pt-5">
+                <p class="mb-0 mt-2 mr-2 font-weight-bold">Create new board:</p>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="userIntiveEmail"
+                  rules="required|email"
+                  style="width: 30%"
+                >
+                  <v-text-field
+                    @keydown.enter.native="createBoard"
+                    v-model="boardTitle"
+                    label="Board title"
+                    :error-messages="errors"
+                    outlined
+                    dense
+                    flat
+                    class="input-text"
+                    @blur="$refs.observer.reset()"
+                  ></v-text-field>
+                </validation-provider>
+                <v-btn
+                  class="ml-2 mt-1 font-weight-bold custom-button"
+                  @click="createBoard"
+                  :disabled="invalid"
+                  :loading="loading"
+                  color="#513396"
+                  dark
+                  small
+                >
+                  CREATE
+                </v-btn>
+              </div>
+            </validation-observer>
+            <v-divider class="mt-5 mb-5" />
+            <p style="font-size: 22px" class="font-weight-black mt-5">
+              My boards
+            </p>
+
             <v-row class="pt-5" v-if="getMyBoards.length">
               <v-col
                 v-for="board in getMyBoards"
@@ -49,8 +72,11 @@
               </v-col>
             </v-row>
             <p v-else class="mt-1">No boards to show.</p>
-            <p class="text-h5 font-weight-black mt-10">Boards shared with me</p>
-            <v-divider />
+            <v-divider class="mt-5 mb-5" />
+            <p style="font-size: 22px" class="font-weight-black">
+              Boards shared with me
+            </p>
+
             <v-row class="pt-5" v-if="getSharedBoards.length">
               <v-col
                 v-for="board in getSharedBoards"
