@@ -29,7 +29,6 @@
           :items="getBoardTransactions"
           :search="search"
           :key="tableKey + 'tbl'"
-          dense
           style="width: 100%"
         >
           <template v-slot:[`item.transType`]="{ item }">

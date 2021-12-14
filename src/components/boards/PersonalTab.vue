@@ -26,7 +26,7 @@
         </v-card-title>
         <v-data-table
           :headers="headers"
-          :items="getBoardTransactions"
+          :items="getPersonalTransactions"
           :search="search"
           :key="tableKey + 'tbl'"
           dense
@@ -86,6 +86,12 @@ export default {
     },
     getBoardTransactions() {
       return this.$store.getters["transactions/getBoardTransactions"]
+    },
+    getCurrentUser() {
+      return this.$store.getters["auth/getCurrentUser"]
+    },
+    getPersonalTransactions() {
+      return this.$store.getters["transactions/getPersonalTransactions"]
     }
   },
   data() {
@@ -105,10 +111,19 @@ export default {
     }
   },
   created() {
-    this.$root.$on("refreshPersonalTab", () => {})
+    this.$root.$on("refreshPersonalTab", () => {
+      this.personalTransactionsData()
+    })
+    this.personalTransactionsData()
   },
   watch: {},
   methods: {
+    personalTransactionsData() {
+      this.$store.dispatch("transactions/getPersonalTransactions", {
+        userEmail: this.getCurrentUser.email,
+        boardUID: this.getBoard._id
+      })
+    },
     eRs(x) {
       let numb = Math.round(x * 100) / 100
       let local = numb.toLocaleString("sr-RS", {

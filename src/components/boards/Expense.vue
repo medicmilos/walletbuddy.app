@@ -15,7 +15,7 @@
           <div class="plan-content">
             <div class="plan-details">
               <span>Expense</span>
-              <p class="mb-0">Make new expense.</p>
+              <p class="mb-0">Make new expense</p>
             </div>
           </div>
         </label>
@@ -31,19 +31,12 @@
           <div class="plan-content">
             <div class="plan-details">
               <span>Income</span>
-              <p class="mb-0">Add new income.</p>
+              <p class="mb-0">Add new income</p>
             </div>
           </div>
         </label>
       </div>
     </div>
-    <!-- <v-select
-      v-model="transactionType"
-      :items="transactionTypeData"
-      label="Transaction Type"
-      persistent-hint
-    ></v-select> -->
-
     <div v-if="transactionType == 'Expense'" class="container">
       <div class="plans three-plans">
         <div class="title-pan">Expense Type</div>
@@ -59,7 +52,7 @@
           <div class="plan-content">
             <div class="plan-details">
               <span>Single</span>
-              <p class="mb-0">Single user expense.</p>
+              <p class="mb-0">Single user expense</p>
             </div>
           </div>
         </label>
@@ -111,7 +104,7 @@
           <div class="plan-content">
             <div class="plan-details">
               <span>Single</span>
-              <p class="mb-0">Add money to single user's ballance.</p>
+              <p class="mb-0">Add money to single user's ballance</p>
             </div>
           </div>
         </label>
@@ -126,7 +119,7 @@
           <div class="plan-content">
             <div class="plan-details">
               <span>Custom</span>
-              <p class="mb-0">Add money from one user to another.</p>
+              <p class="mb-0">Add money from one user to another</p>
             </div>
           </div>
         </label>
@@ -153,7 +146,7 @@
       ></v-text-field>
     </div>
     <div v-if="transactionType == 'Income'" class="d-flex mt-5">
-      <v-select
+      <v-autocomplete
         v-model="incomeToUser"
         :items="boardUsers"
         label="TO USER"
@@ -163,9 +156,9 @@
         outlined
         dense
         flat
-      ></v-select>
+      ></v-autocomplete>
 
-      <v-select
+      <v-autocomplete
         v-if="incomeType == 'Custom'"
         v-model="expenseFromUser"
         :items="boardUsers"
@@ -176,12 +169,12 @@
         outlined
         dense
         flat
-      ></v-select>
+      ></v-autocomplete>
     </div>
 
     <div v-else-if="transactionType == 'Expense'">
       <div v-if="expenseType == 'Single'">
-        <v-select
+        <v-autocomplete
           v-model="expenseFromUser"
           :items="boardUsers"
           label="FROM USER"
@@ -191,10 +184,10 @@
           outlined
           dense
           flat
-        ></v-select>
+        ></v-autocomplete>
       </div>
       <div v-else-if="expenseType == 'Split all'">
-        <v-select
+        <v-autocomplete
           v-model="expenseFromUsers"
           :items="boardUsers"
           label="FROM USERS"
@@ -206,7 +199,7 @@
           outlined
           dense
           flat
-        ></v-select>
+        ></v-autocomplete>
       </div>
       <div v-else-if="expenseType == 'Custom split'">
         <div
@@ -214,7 +207,7 @@
           v-for="(user, index) in exepnseCustomusers"
           :key="'custom-user-' + index"
         >
-          <v-select
+          <v-autocomplete
             v-model="user.user"
             :items="boardUsers"
             label="FROM USER"
@@ -224,7 +217,7 @@
             outlined
             dense
             flat
-          ></v-select>
+          ></v-autocomplete>
           <v-text-field
             class="col-4 input-text pr-5 mt-3"
             label="Custom amount"
