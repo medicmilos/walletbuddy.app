@@ -1,7 +1,12 @@
 import api from "../../api/apiCalls"
 
 export default {
-  state: { myBoards: [], boardTransactions: [], userBallance: 0 },
+  state: {
+    myBoards: [],
+    boardTransactions: [],
+    userBallance: 0,
+    personalTransactions: []
+  },
   getters: {
     getMyBoards(state) {
       return state.myBoards
@@ -11,6 +16,9 @@ export default {
     },
     getUserBallance(state) {
       return state.userBallance
+    },
+    getPersonalTransactions(state) {
+      return state.personalTransactions
     }
   },
   mutations: {
@@ -18,11 +26,13 @@ export default {
       state.myBoards = payload
     },
     setBoardTransactions(state, payload) {
-      console.log("----: ", payload)
       state.boardTransactions = payload
     },
     setUserBallance(state, payload) {
       state.userBallance = payload
+    },
+    setPersonalTransactions(state, payload) {
+      state.personalTransactions = payload
     }
   },
   actions: {
@@ -53,6 +63,18 @@ export default {
         .getUserBallance(payload)
         .then(response => {
           commit("setUserBallance", response)
+
+          return { status: true, data: response }
+        })
+        .catch(error => {
+          return { status: false, data: error }
+        })
+    },
+    async getPersonalTransactions({ commit }, payload) {
+      return api
+        .getPersonalTransactions(payload)
+        .then(response => {
+          commit("setPersonalTransactions", response)
 
           return { status: true, data: response }
         })

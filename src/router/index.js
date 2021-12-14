@@ -2,6 +2,7 @@ import store from "../store"
 import Vue from "vue"
 import VueRouter from "vue-router"
 
+import Analytics from "../screens/analytics/Analytics"
 import Board from "../screens/boards/Board"
 import Boards from "../screens/boards/Boards"
 import ForgotPassword from "../screens/auth/ForgotPassword"
@@ -65,6 +66,15 @@ const routes = [
     }
   },
   {
+    path: "/app/analytics",
+    name: "analytics",
+    component: Analytics,
+    meta: {
+      title: "Analytics",
+      requiresAuth: true
+    }
+  },
+  {
     path: "*",
     component: Landing,
     meta: {
@@ -109,7 +119,6 @@ router.beforeEach((to, from, next) => {
       next({ name: "login" })
     }
   } else {
-    console.log(123, to.name)
     if (to.name !== null) {
       if (to.name == "landing") {
         if (access) {

@@ -39,7 +39,6 @@ export default {
           return { status: true, data: response }
         })
         .catch(error => {
-          console.log("asd", error.response.data.message)
           return { status: false, data: error.response.data.message }
         })
     },

@@ -73,5 +73,15 @@ export default {
           payload.userEmail
       )
       .then(response => response.data)
+  },
+  getPersonalTransactions(payload) {
+    return baseRequest
+      .get(
+        "/transactions/getPersonalTransactions?boardUID=" +
+          payload.boardUID +
+          "&userEmail=" +
+          payload.userEmail
+      )
+      .then(response => response.data)
   }
 }

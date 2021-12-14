@@ -5,7 +5,7 @@
 
       <span>{{ eRs(getBoard.ballance) }}</span>
       &nbsp;
-      <span>RSD</span>
+      <span>{{ getBoard.boardCurrency }}</span>
     </p>
     <v-divider class="mb-5 mt-5" />
     <validation-observer ref="observer" v-slot="{ invalid }">
@@ -74,6 +74,9 @@
         :items="getUsersOnBoard"
         :search="search"
       >
+        <template v-slot:[`item.amount`]="{ item }">
+          {{ item.amount }} {{ getBoard.boardCurrency }}
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <UserReminderModal
             :data="{
