@@ -1,5 +1,5 @@
 import { extend } from "vee-validate"
-import { email, numeric, required } from "vee-validate/dist/rules"
+import { email, regex, required } from "vee-validate/dist/rules"
 
 extend("required", {
   ...required,
@@ -11,7 +11,7 @@ extend("email", {
   message: "E-mail must be valid format"
 })
 
-extend("numeric", {
-  ...numeric,
+extend("numDecimal", {
+  ...regex,
   message: "Field must be number"
 })

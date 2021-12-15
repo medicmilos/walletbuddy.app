@@ -54,12 +54,11 @@
                   ></v-autocomplete>
                 </validation-provider>
                 <v-btn
-                  class="ml-2 mt-2 font-weight-bold custom-button"
+                  class="ml-2 mt-2 font-weight-bold white--text"
                   @click="createBoard"
                   :disabled="invalid"
                   :loading="loading"
                   color="#513396"
-                  dark
                   small
                 >
                   CREATE
@@ -315,11 +314,17 @@ export default {
         boardCurrency: this.boardCurrency,
         users: [this.getCurrentUser.email]
       }
-      this.$store.dispatch("boards/createNewBoard", data).then(() => {
-        this.getMyBoardsData()
-        this.boardTitle = ""
-        this.boardCurrency = null
+      this.$store.dispatch("boards/createNewBoard", data).then(response => {
         this.loading = false
+        if (response.status) {
+          this.getMyBoardsData()
+          this.boardTitle = ""
+          this.boardCurrency = null
+          this.$refs.observer.reset()
+          this.$root.$emit("actionResponse", 1, "New board created")
+        } else {
+          this.$root.$emit("actionResponse", 0, response.data)
+        }
       })
     },
     getMyBoardsData() {
