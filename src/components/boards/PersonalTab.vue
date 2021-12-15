@@ -28,7 +28,6 @@
         :headers="headers"
         :items="getPersonalTransactions"
         :search="search"
-        :key="tableKey + 'tbl'"
         style="width: 100%"
       >
         <template v-slot:[`item.transType`]="{ item }">
@@ -82,9 +81,6 @@ export default {
     getBoard() {
       return this.$store.getters["boards/getBoard"]
     },
-    getBoardTransactions() {
-      return this.$store.getters["transactions/getBoardTransactions"]
-    },
     getCurrentUser() {
       return this.$store.getters["auth/getCurrentUser"]
     },
@@ -95,7 +91,6 @@ export default {
   data() {
     return {
       search: "",
-      tableKey: 0,
       headers: [
         { text: "Transaction", value: "transType" },
         { text: "Trans. type", value: "expenseType" },
@@ -109,9 +104,6 @@ export default {
     }
   },
   created() {
-    this.$root.$on("refreshPersonalTab", () => {
-      this.personalTransactionsData()
-    })
     this.personalTransactionsData()
   },
   watch: {},
@@ -119,7 +111,7 @@ export default {
     personalTransactionsData() {
       this.$store.dispatch("transactions/getPersonalTransactions", {
         userEmail: this.getCurrentUser.email,
-        boardUID: this.getBoard._id
+        boardUID: this.$route.params.uid
       })
     },
     eRs(x) {

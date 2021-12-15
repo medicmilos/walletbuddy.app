@@ -49,14 +49,14 @@
                       placeholder="Password"
                     ></v-text-field>
                   </validation-provider>
-                  <router-link
+                  <!-- <router-link
                     :to="{
                       name: 'forgot-password'
                     }"
                     class="black--text"
                   >
                     <p class="mb-0 subtitle-2">Lost your password?</p>
-                  </router-link>
+                  </router-link> -->
                   <router-link
                     :to="{
                       name: 'register'

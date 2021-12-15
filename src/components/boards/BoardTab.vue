@@ -50,12 +50,12 @@
     />
     <v-card>
       <apexchart
-        :key="chartKey"
         type="bar"
         height="300"
         :options="chartOptions"
         :series="series"
         title="sadasd"
+        :key="'apex' + chartId"
       ></apexchart>
     </v-card>
     <v-divider class="mb-5 mt-5" />
@@ -78,7 +78,6 @@
         :headers="headers"
         :items="getUsersOnBoard"
         :search="search"
-        :key="tableKey + 'board'"
       >
         <template v-slot:[`item.amount`]="{ item }">
           {{ item.amount }} {{ getBoard.boardCurrency }}
@@ -124,15 +123,12 @@ export default {
     return {
       loading: false,
       userIntiveEmail: null,
-      openDialog: false,
-      messageData: null,
       search: "",
       headers: [
         { text: "User", value: "user" },
         { text: "Ballance", value: "amount" },
         { text: "Actions", value: "actions" }
       ],
-      chartKey: 0,
       series: [
         {
           name: "Ballance",
@@ -186,29 +182,25 @@ export default {
           }
         }
       },
-      tableKey: 0
+      chartId: 0
     }
   },
   created() {
-    console.log("creatted board tab")
-    this.getBoardUsers(this.getBoard._id)
-
-    this.$root.$on("refreshBoardTab", () => {
-      console.log("refreshBoardTab")
-      this.getBoardUsers(this.getBoard._id)
-    })
+    this.getBoardUsers()
   },
   watch: {},
   methods: {
-    getBoardUsers(id) {
-      this.$store.dispatch("boards/getUsersOnBoard", id).then(() => {
-        this.chartOptions.xaxis.categories = this.getUsersOnBoard.map(
-          obj => obj.user
-        )
-        this.series[0].data = this.getUsersOnBoard.map(obj => obj.amount)
-        this.chartKey++
-        this.tableKey++
-      })
+    getBoardUsers() {
+      console.log("getUsersOnBoard: ", this.$route.params.uid)
+      this.$store
+        .dispatch("boards/getUsersOnBoard", this.$route.params.uid)
+        .then(() => {
+          this.chartOptions.xaxis.categories = this.getUsersOnBoard.map(
+            obj => obj.user
+          )
+          this.chartId++
+          this.series[0].data = this.getUsersOnBoard.map(obj => obj.amount)
+        })
     },
     inviteUserByEmail() {
       this.$refs.observer.validate()
@@ -217,7 +209,7 @@ export default {
       this.$store
         .dispatch("boards/inviteUserToBoard", {
           userEmail: this.userIntiveEmail,
-          boardUID: this.getBoard._id
+          boardUID: this.$route.params.uid
         })
         .then(() => {
           this.loading = false

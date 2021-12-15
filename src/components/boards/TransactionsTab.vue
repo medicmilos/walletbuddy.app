@@ -8,7 +8,10 @@
     </p>
     <v-divider v-if="getBoard.ownerUID === getCurrentUser._id" />
     <v-row v-if="getBoard.ownerUID === getCurrentUser._id" class="pt-5">
-      <Expense :board="getBoard" :boardUsers="getBoard.users" />
+      <Expense 
+        :board="getBoard"
+        :boardUsers="getBoard.users"
+      />
     </v-row>
     <v-divider
       v-if="getBoard.ownerUID === getCurrentUser._id"
@@ -34,7 +37,6 @@
         :headers="headers"
         :items="getBoardTransactions"
         :search="search"
-        :key="tableKey + 'tbl'"
         style="width: 100%"
       >
         <template v-slot:[`item.transType`]="{ item }">
@@ -98,7 +100,6 @@ export default {
   data() {
     return {
       search: "",
-      tableKey: 0,
       headers: [
         { text: "Transaction", value: "transType" },
         { text: "Trans. type", value: "expenseType" },
@@ -111,11 +112,7 @@ export default {
       ]
     }
   },
-  created() {
-    this.$root.$on("refreshTransTab", () => {
-      this.tableKey++
-    })
-  },
+  created() {},
   methods: {}
 }
 </script>
