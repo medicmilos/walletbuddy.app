@@ -30,12 +30,11 @@
           ></v-text-field>
         </validation-provider>
         <v-btn
-          class="ml-2 mt-1 font-weight-bold custom-button"
+          class="ml-2 mt-1 font-weight-bold white--text"
           @click="inviteUserByEmail"
           :disabled="invalid"
           :loading="loading"
           color="#513396"
-          dark
           small
         >
           ADD

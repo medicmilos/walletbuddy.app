@@ -71,11 +71,15 @@ export default {
         message: this.message
       }
       this.loading = true
-      this.$store.dispatch("boards/sendEmailReminder", data).then(() => {
+      this.$store.dispatch("boards/sendEmailReminder", data).then(response => {
         this.loading = false
-        this.message = ""
-        this.dialog = false
-        this.$root.$emit("actionResponse", 1, "Message sent")
+        if (response.status) {
+          this.message = ""
+          this.dialog = false
+          this.$root.$emit("actionResponse", 1, "Message sent")
+        } else {
+          this.$root.$emit("actionResponse", 0, response.data)
+        }
       })
     }
   }
