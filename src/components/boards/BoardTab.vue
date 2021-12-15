@@ -2,13 +2,16 @@
   <v-container>
     <p class="font-weight-bold mb-0 board-ballance">
       Board total ballance:
-
       <span>{{ eRs(getBoard.ballance) }}</span>
       &nbsp;
       <span>{{ getBoard.boardCurrency }}</span>
     </p>
     <v-divider class="mb-5 mt-5" />
-    <validation-observer ref="observer" v-slot="{ invalid }">
+    <validation-observer
+      v-if="getCurrentBoard.ownerUID === getCurrentUser._id"
+      ref="observer"
+      v-slot="{ invalid }"
+    >
       <div class="d-flex pt-5">
         <p class="mb-0 mt-2 mr-2 font-weight-bold">Add user to board:</p>
         <validation-provider
@@ -41,7 +44,10 @@
         </v-btn>
       </div>
     </validation-observer>
-    <v-divider class="mb-5 mt-5" />
+    <v-divider
+      v-if="getCurrentBoard.ownerUID === getCurrentUser._id"
+      class="mb-5 mt-5"
+    />
     <v-card>
       <apexchart
         :key="chartKey"
@@ -72,11 +78,15 @@
         :headers="headers"
         :items="getUsersOnBoard"
         :search="search"
+        :key="tableKey + 'board'"
       >
         <template v-slot:[`item.amount`]="{ item }">
           {{ item.amount }} {{ getBoard.boardCurrency }}
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
+        <template
+          v-if="getCurrentBoard.ownerUID === getCurrentUser._id"
+          v-slot:[`item.actions`]="{ item }"
+        >
           <UserReminderModal
             :data="{
               boardUID: getBoard._id,
@@ -102,6 +112,12 @@ export default {
   computed: {
     getUsersOnBoard() {
       return this.$store.getters["boards/getUsersOnBoard"]
+    },
+    getCurrentBoard() {
+      return this.$store.getters["boards/getBoard"]
+    },
+    getCurrentUser() {
+      return this.$store.getters["auth/getCurrentUser"]
     }
   },
   data() {
@@ -169,28 +185,30 @@ export default {
             rotate: -90
           }
         }
-      }
+      },
+      tableKey: 0
     }
   },
   created() {
-    this.getBoardUsers()
+    console.log("creatted board tab")
+    this.getBoardUsers(this.getBoard._id)
 
     this.$root.$on("refreshBoardTab", () => {
-      this.getBoardUsers()
+      console.log("refreshBoardTab")
+      this.getBoardUsers(this.getBoard._id)
     })
   },
   watch: {},
   methods: {
-    getBoardUsers() {
-      this.$store
-        .dispatch("boards/getUsersOnBoard", this.getBoard._id)
-        .then(() => {
-          this.chartOptions.xaxis.categories = this.getUsersOnBoard.map(
-            obj => obj.user
-          )
-          this.series[0].data = this.getUsersOnBoard.map(obj => obj.amount)
-          this.chartKey++
-        })
+    getBoardUsers(id) {
+      this.$store.dispatch("boards/getUsersOnBoard", id).then(() => {
+        this.chartOptions.xaxis.categories = this.getUsersOnBoard.map(
+          obj => obj.user
+        )
+        this.series[0].data = this.getUsersOnBoard.map(obj => obj.amount)
+        this.chartKey++
+        this.tableKey++
+      })
     },
     inviteUserByEmail() {
       this.$refs.observer.validate()

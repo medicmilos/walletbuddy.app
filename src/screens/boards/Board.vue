@@ -79,6 +79,7 @@ export default {
     }
   },
   created() {
+    console.log("creatted")
     this.refreshTabs()
     this.$root.$on("refreshBoard", () => {
       this.refreshTabs()
