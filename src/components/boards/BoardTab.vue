@@ -54,7 +54,6 @@
         height="300"
         :options="chartOptions"
         :series="series"
-        title="sadasd"
         :key="'apex' + chartId"
       ></apexchart>
     </v-card>
@@ -191,15 +190,16 @@ export default {
   watch: {},
   methods: {
     getBoardUsers() {
-      console.log("getUsersOnBoard: ", this.$route.params.uid)
       this.$store
         .dispatch("boards/getUsersOnBoard", this.$route.params.uid)
         .then(() => {
           this.chartOptions.xaxis.categories = this.getUsersOnBoard.map(
             obj => obj.user
           )
-          this.chartId++
+
           this.series[0].data = this.getUsersOnBoard.map(obj => obj.amount)
+
+          this.chartId++
         })
     },
     inviteUserByEmail() {

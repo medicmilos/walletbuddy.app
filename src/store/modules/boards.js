@@ -1,7 +1,13 @@
 import api from "../../api/apiCalls"
 
 export default {
-  state: { myBoards: [], sharedBoards: [], board: null, usersOnBoard: [] },
+  state: {
+    myBoards: [],
+    sharedBoards: [],
+    board: null,
+    usersOnBoard: [],
+    analyticsTotalSum: []
+  },
   getters: {
     getMyBoards(state) {
       return state.myBoards
@@ -14,6 +20,9 @@ export default {
     },
     getUsersOnBoard(state) {
       return state.usersOnBoard
+    },
+    analyticsTotalSum(state) {
+      return state.analyticsTotalSum
     }
   },
   mutations: {
@@ -28,6 +37,9 @@ export default {
     },
     setUsersOnBoard(state, payload) {
       state.usersOnBoard = payload
+    },
+    setAnalyticsTotalSum(state, payload) {
+      state.analyticsTotalSum = payload
     }
   },
   actions: {
@@ -103,6 +115,18 @@ export default {
       return api
         .sendEmailReminder(payload)
         .then(response => {
+          return { status: true, data: response.data }
+        })
+        .catch(error => {
+          return { status: false, data: error }
+        })
+    },
+    async analyticsTotalSum({ commit }, payload) {
+      return api
+        .analyticsTotalSum(payload)
+        .then(response => {
+          commit("setAnalyticsTotalSum", response)
+
           return { status: true, data: response.data }
         })
         .catch(error => {
