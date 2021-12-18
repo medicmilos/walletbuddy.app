@@ -363,9 +363,6 @@ export default {
             sum += parseFloat(item.amount)
           })
 
-          console.log("sum: ", sum)
-          console.log("this.amount: ", this.amount)
-
           if (sum !== parseFloat(this.amount)) {
             this.valErrorMessage =
               "Whole expense amount must be shared between selected users"
@@ -377,7 +374,7 @@ export default {
       this.valErrorMessage = ""
 
       const data = {
-        boardUID: this.board._id,
+        boardUID: this.$route.params.uid,
         name: this.name,
         amount: parseFloat(this.amount),
         fromUser: this.expenseFromUser,
@@ -396,9 +393,6 @@ export default {
         .then(response => {
           this.loading = false
           if (response.status) {
-            this.$root.$emit("refreshBoard")
-            this.$root.$emit("refreshTransTab")
-
             this.$root.$emit(
               "actionResponse",
               1,
@@ -412,6 +406,7 @@ export default {
             this.expenseFromUsers = null
             this.exepnseCustomusers = []
             this.$refs.observer.reset()
+            this.$root.$emit("refreshTransactions")
           } else {
             this.$root.$emit("actionResponse", 0, response.data)
           }

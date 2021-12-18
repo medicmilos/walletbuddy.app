@@ -30,7 +30,12 @@ export default {
   },
   getSharedBoards(payload) {
     return baseRequest
-      .get("/boards/getSharedBoards?email=" + payload)
+      .get(
+        "/boards/getSharedBoards?email=" +
+          payload.email +
+          "&userUID=" +
+          payload.userUID
+      )
       .then(response => response.data)
   },
   getBoard(payload) {
@@ -51,6 +56,11 @@ export default {
   sendEmailReminder(payload) {
     return baseRequest
       .post("/boards/sendEmailReminder", payload)
+      .then(response => response.data)
+  },
+  analyticsTotalSum(payload) {
+    return baseRequest
+      .get("/boards/analyticsTotalSum?email=" + payload)
       .then(response => response.data)
   },
   //transactions

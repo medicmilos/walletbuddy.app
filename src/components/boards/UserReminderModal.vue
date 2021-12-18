@@ -42,7 +42,7 @@
           :disabled="loading"
           :loading="loading"
           color="#513396"
-          dark
+          class="white--text"
           small
         >
           Send

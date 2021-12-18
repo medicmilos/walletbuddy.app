@@ -2,13 +2,16 @@
   <v-container>
     <p class="font-weight-bold mb-0 board-ballance">
       Board total ballance:
-
       <span>{{ eRs(getBoard.ballance) }}</span>
       &nbsp;
       <span>{{ getBoard.boardCurrency }}</span>
     </p>
     <v-divider class="mb-5 mt-5" />
-    <validation-observer ref="observer" v-slot="{ invalid }">
+    <validation-observer
+      v-if="getCurrentBoard.ownerUID === getCurrentUser._id"
+      ref="observer"
+      v-slot="{ invalid }"
+    >
       <div class="d-flex pt-5">
         <p class="mb-0 mt-2 mr-2 font-weight-bold">Add user to board:</p>
         <validation-provider
@@ -41,15 +44,17 @@
         </v-btn>
       </div>
     </validation-observer>
-    <v-divider class="mb-5 mt-5" />
+    <v-divider
+      v-if="getCurrentBoard.ownerUID === getCurrentUser._id"
+      class="mb-5 mt-5"
+    />
     <v-card>
       <apexchart
-        :key="chartKey"
         type="bar"
         height="300"
         :options="chartOptions"
         :series="series"
-        title="sadasd"
+        :key="'apex' + chartId"
       ></apexchart>
     </v-card>
     <v-divider class="mb-5 mt-5" />
@@ -76,7 +81,10 @@
         <template v-slot:[`item.amount`]="{ item }">
           {{ item.amount }} {{ getBoard.boardCurrency }}
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
+        <template
+          v-if="getCurrentBoard.ownerUID === getCurrentUser._id"
+          v-slot:[`item.actions`]="{ item }"
+        >
           <UserReminderModal
             :data="{
               boardUID: getBoard._id,
@@ -102,21 +110,24 @@ export default {
   computed: {
     getUsersOnBoard() {
       return this.$store.getters["boards/getUsersOnBoard"]
+    },
+    getCurrentBoard() {
+      return this.$store.getters["boards/getBoard"]
+    },
+    getCurrentUser() {
+      return this.$store.getters["auth/getCurrentUser"]
     }
   },
   data() {
     return {
       loading: false,
       userIntiveEmail: null,
-      openDialog: false,
-      messageData: null,
       search: "",
       headers: [
         { text: "User", value: "user" },
         { text: "Ballance", value: "amount" },
         { text: "Actions", value: "actions" }
       ],
-      chartKey: 0,
       series: [
         {
           name: "Ballance",
@@ -169,27 +180,26 @@ export default {
             rotate: -90
           }
         }
-      }
+      },
+      chartId: 0
     }
   },
   created() {
     this.getBoardUsers()
-
-    this.$root.$on("refreshBoardTab", () => {
-      this.getBoardUsers()
-    })
   },
   watch: {},
   methods: {
     getBoardUsers() {
       this.$store
-        .dispatch("boards/getUsersOnBoard", this.getBoard._id)
+        .dispatch("boards/getUsersOnBoard", this.$route.params.uid)
         .then(() => {
           this.chartOptions.xaxis.categories = this.getUsersOnBoard.map(
             obj => obj.user
           )
+
           this.series[0].data = this.getUsersOnBoard.map(obj => obj.amount)
-          this.chartKey++
+
+          this.chartId++
         })
     },
     inviteUserByEmail() {
@@ -199,7 +209,7 @@ export default {
       this.$store
         .dispatch("boards/inviteUserToBoard", {
           userEmail: this.userIntiveEmail,
-          boardUID: this.getBoard._id
+          boardUID: this.$route.params.uid
         })
         .then(() => {
           this.loading = false

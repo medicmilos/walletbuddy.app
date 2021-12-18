@@ -1,13 +1,22 @@
 <template>
   <v-container>
-    <p class="font-weight-bold mb-0 board-ballance mt-2 pb-3">
+    <p
+      v-if="getBoard.ownerUID === getCurrentUser._id"
+      class="font-weight-bold mb-0 board-ballance mt-2 pb-3"
+    >
       Make transaction
     </p>
-    <v-divider />
-    <v-row class="pt-5">
-      <Expense :board="getBoard" :boardUsers="getBoard.users" />
+    <v-divider v-if="getBoard.ownerUID === getCurrentUser._id" />
+    <v-row v-if="getBoard.ownerUID === getCurrentUser._id" class="pt-5">
+      <Expense 
+        :board="getBoard"
+        :boardUsers="getBoard.users"
+      />
     </v-row>
-    <v-divider class="mt-5 mb-5" />
+    <v-divider
+      v-if="getBoard.ownerUID === getCurrentUser._id"
+      class="mt-5 mb-5"
+    />
 
     <v-card class="ml-3 mr-3 mb-5">
       <v-card-title>
@@ -28,7 +37,6 @@
         :headers="headers"
         :items="getBoardTransactions"
         :search="search"
-        :key="tableKey + 'tbl'"
         style="width: 100%"
       >
         <template v-slot:[`item.transType`]="{ item }">
@@ -84,12 +92,14 @@ export default {
     },
     getBoardTransactions() {
       return this.$store.getters["transactions/getBoardTransactions"]
+    },
+    getCurrentUser() {
+      return this.$store.getters["auth/getCurrentUser"]
     }
   },
   data() {
     return {
       search: "",
-      tableKey: 0,
       headers: [
         { text: "Transaction", value: "transType" },
         { text: "Trans. type", value: "expenseType" },
@@ -102,11 +112,7 @@ export default {
       ]
     }
   },
-  created() {
-    this.$root.$on("refreshTransTab", () => {
-      this.tableKey++
-    })
-  },
+  created() {},
   methods: {}
 }
 </script>

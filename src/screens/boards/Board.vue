@@ -37,13 +37,13 @@
               </v-tab>
 
               <v-tab-item>
-                <BoardTab :getBoard="getBoard" />
+                <BoardTab :getBoard="getBoard" :key="boardKey + 'board'" />
               </v-tab-item>
               <v-tab-item>
-                <TransactionsTab />
+                <TransactionsTab :key="transKey + 'trans'" />
               </v-tab-item>
               <v-tab-item>
-                <PersonalTab />
+                <PersonalTab :key="personKey + 'pers'" />
               </v-tab-item>
             </v-tabs>
           </v-container>
@@ -73,15 +73,15 @@ export default {
   data() {
     return {
       loading: false,
-      boardTabKey: 0,
-      transTabKey: 0,
-      personalTabKey: 1
+      boardKey: 0,
+      transKey: 0,
+      personKey: 0
     }
   },
   created() {
-    this.refreshTabs()
-    this.$root.$on("refreshBoard", () => {
-      this.refreshTabs()
+    this.getBoardData()
+    this.$root.$on("refreshTransactions", () => {
+      this.getBoardData()
     })
   },
   methods: {
@@ -96,10 +96,10 @@ export default {
       })
     },
     async refreshTabs() {
-      this.getBoardData()
-      this.$root.$emit("refreshBoardTab")
-      this.$root.$emit("refreshTransTab")
-      this.$root.$emit("refreshPersonalTab")
+      await this.getBoardData()
+      this.boardKey++
+      this.transKey++
+      this.personKey++
     }
   }
 }

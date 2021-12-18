@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12" sm="12">
-        <v-sheet min-height="80vh" rounded="lg" class="pa-0">
+        <v-sheet min-height="80vh" rounded="lg" class="pa-0 d-flex">
           <v-container class="boards-page pa-7">
             <p
               style="font-size: 24px"
@@ -98,9 +98,7 @@
                         params: { uid: board._id }
                       }"
                     >
-                      <v-btn dark small color="deep-purple accent-4">
-                        OPEN
-                      </v-btn>
+                      <v-btn dark small color="#513396">OPEN</v-btn>
                     </router-link>
                   </v-card-actions>
                 </v-card>
@@ -139,9 +137,7 @@
                         params: { uid: board._id }
                       }"
                     >
-                      <v-btn dark small color="deep-purple accent-4">
-                        OPEN
-                      </v-btn>
+                      <v-btn dark small color="#513396">OPEN</v-btn>
                     </router-link>
                   </v-card-actions>
                 </v-card>
@@ -331,7 +327,10 @@ export default {
       this.$store.dispatch("boards/getMyBoards", this.getCurrentUser._id)
     },
     getSharedBoardsData() {
-      this.$store.dispatch("boards/getSharedBoards", this.getCurrentUser.email)
+      this.$store.dispatch("boards/getSharedBoards", {
+        userUID: this.getCurrentUser._id,
+        email: this.getCurrentUser.email
+      })
     },
     eRs(x) {
       let numb = Math.round(x * 100) / 100
@@ -347,6 +346,7 @@ export default {
 
 <style lang="scss">
 .boards-page {
+  min-height: 100%;
   background: rgb(252, 249, 252);
   background: linear-gradient(
     45deg,
